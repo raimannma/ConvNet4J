@@ -7,6 +7,7 @@ class LayerConfig {
     double dropProb;
     double biasPref;
     int groupSize;
+    int numNeurons;
     private int filters;
     private int sx;
     private int sy;
@@ -17,7 +18,6 @@ class LayerConfig {
     private int pad;
     private double l1DecayMul;
     private double l2DecayMul;
-    private int numNeurons;
     private int depth;
     private int k;
     private int n;
@@ -163,6 +163,10 @@ class LayerConfig {
 
     int getNumNeurons() {
         return this.numNeurons;
+    }
+
+    void setNumNeurons(final int numNeurons) {
+        this.numNeurons = numNeurons;
     }
 
     double getDropProb() {
