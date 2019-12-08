@@ -22,6 +22,18 @@ public enum Utils {
         return arr;
     }
 
+    public static List<Double> zerosDoubleList(final int size) {
+        final Double[] arr = new Double[size];
+        Arrays.fill(arr, 0.0);
+        return Arrays.asList(arr);
+    }
+
+    public static List<Integer> zerosIntList(final int size) {
+        final Integer[] arr = new Integer[size];
+        Arrays.fill(arr, 0);
+        return Arrays.asList(arr);
+    }
+
     public static int[] zerosInt(final int size) {
         final int[] arr = new int[size];
         Arrays.fill(arr, 0);
