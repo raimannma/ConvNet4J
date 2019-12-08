@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ConvolutionalLayer extends Layer {
-    private final int inSX;
-    private final int inSY;
     private Vol biases;
     private int pad;
     private double l1DecayMul;
@@ -27,8 +25,8 @@ class ConvolutionalLayer extends Layer {
         this.outDepth = opt.getFilters();
         this.sx = opt.getSX();
         this.inDepth = opt.getInDepth();
-        this.inSX = opt.getInSX();
-        this.inSY = opt.getInSY();
+        final int inSX = opt.getInSX();
+        final int inSY = opt.getInSY();
 
         //optional
         this.sy = LayerConfig.getOrDefault(opt.getSY(), this.sx);
@@ -41,8 +39,8 @@ class ConvolutionalLayer extends Layer {
         // note we are doing floor, so if the strided convolution of the filter doesnt fit into the input
         // volume exactly, the output volume will be trimmed and not contain the (incomplete) computed
         // final application.
-        this.outSX = (int) Math.floor((double) (this.inSX + this.pad * 2 - this.sx) / this.stride + 1);
-        this.outSY = (int) Math.floor((double) (this.inSY + this.pad * 2 - this.sy) / this.stride + 1);
+        this.outSX = (int) Math.floor((double) (inSX + this.pad * 2 - this.sx) / this.stride + 1);
+        this.outSY = (int) Math.floor((double) (inSY + this.pad * 2 - this.sy) / this.stride + 1);
         this.type = LayerType.CONVOLUTIONAL;
 
         final double bias = LayerConfig.getOrDefault(0, opt.getBiasPref());

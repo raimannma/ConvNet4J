@@ -42,7 +42,7 @@ class Network {
 
             if ((def.type == Layer.LayerType.FC || def.type == Layer.LayerType.CONVOLUTIONAL) && Double.isNaN(def.biasPref)) {
                 def.biasPref = 0.0;
-                if (def.activation == Activation.ActivationType.RELU) {
+                if (def.activation == ActivationType.RELU) {
                     def.biasPref = 0.1; // relus like a bit of positive bias to get gradients early
                     // otherwise it's technically possible that a relu unit will never turn on (by chance)
                     // and will never get any gradient and never contribute any computation. Dead relu.
@@ -52,19 +52,19 @@ class Network {
             layerConfigs.add(def);
 
             if (def.activation != null) {
-                if (def.activation == Activation.ActivationType.RELU) {
+                if (def.activation == ActivationType.RELU) {
                     final LayerConfig config = new LayerConfig();
                     config.setType(Layer.LayerType.RELU);
                     layerConfigs.add(config);
-                } else if (def.activation == Activation.ActivationType.SIGMOID) {
+                } else if (def.activation == ActivationType.SIGMOID) {
                     final LayerConfig config = new LayerConfig();
                     config.setType(Layer.LayerType.SIGMOID);
                     layerConfigs.add(config);
-                } else if (def.activation == Activation.ActivationType.TANH) {
+                } else if (def.activation == ActivationType.TANH) {
                     final LayerConfig config = new LayerConfig();
                     config.setType(Layer.LayerType.TANH);
                     layerConfigs.add(config);
-                } else if (def.activation == Activation.ActivationType.MAXOUT) {
+                } else if (def.activation == ActivationType.MAXOUT) {
                     final LayerConfig config = new LayerConfig();
                     config.setType(Layer.LayerType.MAXOUT);
                     config.setGroupSize(Double.isNaN(def.groupSize) ? 2 : def.groupSize);

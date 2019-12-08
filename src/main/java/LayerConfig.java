@@ -1,6 +1,6 @@
 class LayerConfig {
     int numClasses;
-    Activation.ActivationType activation;
+    ActivationType activation;
     Layer.LayerType type;
     int inSX;
     int inSY;
@@ -51,11 +51,11 @@ class LayerConfig {
         this.numClasses = numClasses;
     }
 
-    public Activation.ActivationType getActivation() {
+    public ActivationType getActivation() {
         return this.activation;
     }
 
-    public void setActivation(final Activation.ActivationType activation) {
+    public void setActivation(final ActivationType activation) {
         this.activation = activation;
     }
 
@@ -203,7 +203,7 @@ class LayerConfig {
         this.l2DecayMul = l2DecayMul;
     }
 
-    public int getDepth() {
+    int getDepth() {
         return this.depth;
     }
 
@@ -219,7 +219,7 @@ class LayerConfig {
         this.k = k;
     }
 
-    public int getN() {
+    int getN() {
         return this.n;
     }
 

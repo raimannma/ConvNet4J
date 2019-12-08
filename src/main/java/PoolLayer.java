@@ -1,8 +1,6 @@
 import com.google.gson.JsonObject;
 
 public class PoolLayer extends Layer {
-    private final int inSY;
-    private final int inSX;
     private int sx;
     private int sy;
     private int inDepth;
@@ -19,8 +17,8 @@ public class PoolLayer extends Layer {
         // required
         this.sx = opt.getSX();
         this.inDepth = opt.getInDepth();
-        this.inSX = opt.getInSX();
-        this.inSY = opt.getInSY();
+        final int inSX = opt.getInSX();
+        final int inSY = opt.getInSY();
 
         // optional
         this.sy = LayerConfig.getOrDefault(this.sx, opt.getSY());
@@ -29,8 +27,8 @@ public class PoolLayer extends Layer {
 
         //computed
         this.outDepth = this.inDepth;
-        this.outSX = (int) Math.floor((double) (this.inSX + this.pad * 2 - this.sx) / this.stride + 1);
-        this.outSX = (int) Math.floor((double) (this.inSY + this.pad * 2 - this.sy) / this.stride + 1);
+        this.outSX = (int) Math.floor((double) (inSX + this.pad * 2 - this.sx) / this.stride + 1);
+        this.outSX = (int) Math.floor((double) (inSY + this.pad * 2 - this.sy) / this.stride + 1);
         this.type = LayerType.POOL;
 
         this.switchX = Utils.zerosInt(this.outSX * this.outSY * this.outDepth);
