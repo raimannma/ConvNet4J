@@ -19,7 +19,6 @@ class ConvolutionalLayer extends Layer {
     private int out_sy;
     private int out_depth;
     private int out_sx;
-    private Vol in_act;
 
 
     ConvolutionalLayer() {

@@ -10,7 +10,6 @@ public class FullyConnectedLayer extends Layer {
     private double l1_decay_mul;
     private double l2_decay_mul;
     private int numInputs;
-    private Vol in_act;
 
     FullyConnectedLayer() {
         this(new LayerConfig());

@@ -1,7 +1,6 @@
 import com.google.gson.JsonObject;
 
 public class InputLayer extends Layer {
-    private Vol in_act;
 
     InputLayer() {
         this(new LayerConfig());

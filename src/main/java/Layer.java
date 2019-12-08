@@ -2,6 +2,7 @@ import com.google.gson.JsonObject;
 
 abstract class Layer {
     public Vol out_act;
+    public Vol in_act;
     public int out_sx;
     public int out_sy;
     public int out_depth;

@@ -5,7 +5,6 @@ import java.util.Arrays;
 public class DropoutLayer extends Layer {
     private final boolean[] dropped;
     private double dropProb;
-    private Vol in_act;
 
     DropoutLayer() {
         this(new LayerConfig());

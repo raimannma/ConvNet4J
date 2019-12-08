@@ -49,27 +49,6 @@ public enum Utils {
         return false;
     }
 
-    public static double[] getMaxMin(final double[] arr) {
-        if (arr.length == 0) {
-            return null;
-        }
-        double max = arr[0];
-        double min = arr[0];
-        double maxIndex = 0;
-        double minIndex = 0;
-        for (int i = 1; i < arr.length; i++) {
-            if (arr[i] > max) {
-                max = arr[i];
-                maxIndex = i;
-            }
-            if (arr[i] < min) {
-                min = arr[i];
-                minIndex = i;
-            }
-        }
-        return new double[]{maxIndex, max, minIndex, min};
-    }
-
     // create random permutation of numbers, in range [0...n-1]
     public static int[] randPermutation(final int n) {
         int i = n;
@@ -112,6 +91,31 @@ public enum Utils {
             list.add(options.getOrDefault(fieldName, defaultValue));
         }
         return (T[]) list.toArray();
+    }
+
+    public static double max(final double[] arr) {
+        return getMaxMin(arr)[1];
+    }
+
+    public static double[] getMaxMin(final double[] arr) {
+        if (arr.length == 0) {
+            return null;
+        }
+        double max = arr[0];
+        double min = arr[0];
+        double maxIndex = 0;
+        double minIndex = 0;
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+                maxIndex = i;
+            }
+            if (arr[i] < min) {
+                min = arr[i];
+                minIndex = i;
+            }
+        }
+        return new double[]{maxIndex, max, minIndex, min};
     }
 }
 

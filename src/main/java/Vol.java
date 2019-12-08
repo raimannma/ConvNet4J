@@ -103,7 +103,7 @@ public class Vol implements Cloneable {
         this.w[this.getIndex(x, y, depth)] = val;
     }
 
-    private double get(final int x, final int y, final int depth) {
+    double get(final int x, final int y, final int depth) {
         return this.w[this.getIndex(x, y, depth)];
     }
 
@@ -127,7 +127,7 @@ public class Vol implements Cloneable {
         this.w[this.getIndex(x, y, depth)] += val;
     }
 
-    public double getGrad(final int x, final int y, final int depth) {
+    double getGrad(final int x, final int y, final int depth) {
         return this.dw[this.getIndex(x, y, depth)];
     }
 
