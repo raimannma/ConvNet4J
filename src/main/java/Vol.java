@@ -69,14 +69,14 @@ public class Vol implements Cloneable {
 
     private static Vol augment(final Vol vol, final int crop, final int dx, final int dy, final boolean flip) {
         Vol out;
-        if (crop != vol.sx || dx != = 0 || dy != = 0) {
+        if (crop != vol.sx || dx != 0 || dy != 0) {
             out = new Vol(crop, crop, vol.depth, 0.0);
-            for (var x = 0; x < crop; x++) {
-                for (var y = 0; y < crop; y++) {
+            for (int x = 0; x < crop; x++) {
+                for (int y = 0; y < crop; y++) {
                     if (x + dx < 0 || x + dx >= vol.sx || y + dy < 0 || y + dy >= vol.sy) {
                         continue; // oob
                     }
-                    for (var d = 0; d < vol.depth; d++) {
+                    for (int d = 0; d < vol.depth; d++) {
                         out.set(x, y, d, vol.get(x + dx, y + dy, d)); // copy data over
                     }
                 }
@@ -86,10 +86,10 @@ public class Vol implements Cloneable {
         }
         if (flip) {
             // flip volume horziontally
-            var temp = out.cloneAndZero();
-            for (var x = 0; x < out.sx; x++) {
-                for (var y = 0; y < out.sy; y++) {
-                    for (var d = 0; d < out.depth; d++) {
+            final Vol temp = out.cloneAndZero();
+            for (int x = 0; x < out.sx; x++) {
+                for (int y = 0; y < out.sy; y++) {
+                    for (int d = 0; d < out.depth; d++) {
                         temp.set(x, y, d, out.get(out.sx - x - 1, y, d)); // copy data over
                     }
                 }
@@ -131,11 +131,11 @@ public class Vol implements Cloneable {
         return this.dw[this.getIndex(x, y, depth)];
     }
 
-    public void setGrad(final int x, final int y, final int depth, final double val) {
+    void setGrad(final int x, final int y, final int depth, final double val) {
         this.dw[this.getIndex(x, y, depth)] = val;
     }
 
-    public void addGrad(final int x, final int y, final int depth, final double val) {
+    void addGrad(final int x, final int y, final int depth, final double val) {
         this.dw[this.getIndex(x, y, depth)] += val;
     }
 

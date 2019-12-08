@@ -8,11 +8,11 @@ public class InputLayer extends Layer {
 
     InputLayer(final LayerConfig opt) {
         // required
-        this.out_depth = LayerConfig.getOrDefault(0, opt.getOutDepth(), opt.getInDepth(), opt.getDepth());
+        this.outDepth = LayerConfig.getOrDefault(0, opt.getOutDepth(), opt.getInDepth(), opt.getDepth());
 
         // optional
-        this.out_sx = LayerConfig.getOrDefault(1, opt.getOutSX(), opt.getSX());
-        this.out_sy = LayerConfig.getOrDefault(1, opt.getOutSY(), opt.getSY());
+        this.outSX = LayerConfig.getOrDefault(1, opt.getOutSX(), opt.getSX());
+        this.outSY = LayerConfig.getOrDefault(1, opt.getOutSY(), opt.getSY());
 
         // computed
         this.type = LayerType.INPUT;
@@ -20,9 +20,9 @@ public class InputLayer extends Layer {
 
     @Override
     public Vol forward(final Vol vol, final boolean isTraining) {
-        this.in_act = vol;
-        this.out_act = vol;
-        return this.out_act;
+        this.inAct = vol;
+        this.outAct = vol;
+        return this.outAct;
     }
 
     @Override
@@ -33,18 +33,18 @@ public class InputLayer extends Layer {
     @Override
     public JsonObject toJSON() {
         final JsonObject json = new JsonObject();
-        json.addProperty("out_depth", this.out_depth);
-        json.addProperty("out_sx", this.out_sx);
-        json.addProperty("out_sy", this.out_sy);
+        json.addProperty("outDepth", this.outDepth);
+        json.addProperty("outSX", this.outSX);
+        json.addProperty("outSY", this.outSY);
         json.addProperty("type", this.type.toString());
         return json;
     }
 
     @Override
     public void fromJSON(final JsonObject json) {
-        this.out_depth = json.get("out_depth").getAsInt();
-        this.out_sx = json.get("out_sx").getAsInt();
-        this.out_sy = json.get("out_sy").getAsInt();
+        this.outDepth = json.get("outDepth").getAsInt();
+        this.outSX = json.get("outSX").getAsInt();
+        this.outSY = json.get("outSY").getAsInt();
         this.type = LayerType.valueOf(json.get("type").toString());
     }
 

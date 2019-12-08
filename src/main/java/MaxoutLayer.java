@@ -13,23 +13,23 @@ public class MaxoutLayer extends Layer {
         this.groupSize = LayerConfig.getOrDefault(2, opt.getGroupSize());
 
         //computed
-        this.out_sx = opt.getInSX();
-        this.out_sy = opt.getInSY();
-        this.out_depth = (int) Math.floor((double) opt.getInDepth() / this.groupSize);
+        this.outSX = opt.getInSX();
+        this.outSY = opt.getInSY();
+        this.outDepth = (int) Math.floor((double) opt.getInDepth() / this.groupSize);
         this.type = LayerType.MAXOUT;
-        this.switches = Utils.zerosInt(this.out_sx * this.out_sy * this.out_depth);
+        this.switches = Utils.zerosInt(this.outSX * this.outSY * this.outDepth);
     }
 
     @Override
     public Vol forward(final Vol v, final boolean isTraining) {
-        this.in_act = v;
-        final Vol V2 = new Vol(this.out_sx, this.out_sy, this.out_depth, 0.0);
+        this.inAct = v;
+        final Vol V2 = new Vol(this.outSX, this.outSY, this.outDepth, 0.0);
 
         // optimization branch. If we're operating on 1D arrays we dont have
         // to worry about keeping track of x,y,d coordinates inside
         // input volumes. In convnets we do :(
-        if (this.out_sx == 1 && this.out_sy == 1) {
-            for (int i = 0; i < this.out_depth; i++) {
+        if (this.outSX == 1 && this.outSY == 1) {
+            for (int i = 0; i < this.outDepth; i++) {
                 final int ix = i * this.groupSize; // base index offset
                 double a = v.w[ix];
                 int ai = 0;
@@ -47,7 +47,7 @@ public class MaxoutLayer extends Layer {
             int n = 0; // counter for switches
             for (int x = 0; x < v.sx; x++) {
                 for (int y = 0; y < v.sy; y++) {
-                    for (int i = 0; i < this.out_depth; i++) {
+                    for (int i = 0; i < this.outDepth; i++) {
                         final int ix = i * this.groupSize;
                         double a = v.get(x, y, ix);
                         int ai = 0;
@@ -66,8 +66,8 @@ public class MaxoutLayer extends Layer {
             }
 
         }
-        this.out_act = V2;
-        return this.out_act;
+        this.outAct = V2;
+        return this.outAct;
     }
 
     @Override
@@ -78,9 +78,9 @@ public class MaxoutLayer extends Layer {
     @Override
     public JsonObject toJSON() {
         final JsonObject json = new JsonObject();
-        json.addProperty("out_depth", this.out_depth);
-        json.addProperty("out_sx", this.out_sx);
-        json.addProperty("out_sy", this.out_sy);
+        json.addProperty("outDepth", this.outDepth);
+        json.addProperty("outSX", this.outSX);
+        json.addProperty("outSY", this.outSY);
         json.addProperty("groupSize", this.groupSize);
         json.addProperty("type", this.type.toString());
         return json;
@@ -88,31 +88,31 @@ public class MaxoutLayer extends Layer {
 
     @Override
     public void fromJSON(final JsonObject json) {
-        this.out_depth = json.get("out_depth").getAsInt();
-        this.out_sx = json.get("out_sx").getAsInt();
-        this.out_sy = json.get("out_sy").getAsInt();
+        this.outDepth = json.get("outDepth").getAsInt();
+        this.outSX = json.get("outSX").getAsInt();
+        this.outSY = json.get("outSY").getAsInt();
         this.groupSize = json.get("groupSize").getAsInt();
-        this.type = LayerType.valueOf(json.get("layer_type").getAsString());
+        this.type = LayerType.valueOf(json.get("type").getAsString());
         this.switches = Utils.zerosInt(this.groupSize);
     }
 
     @Override
     public double backward(final Vol output) {
-        final Vol vol = this.in_act; // we need to set dw of this
-        final Vol vol2 = this.out_act;
+        final Vol vol = this.inAct; // we need to set dw of this
+        final Vol vol2 = this.outAct;
         vol.dw = Utils.zerosDouble(vol.w.length); // zero out gradient wrt data
 
         // pass the gradient through the appropriate switch
-        if (this.out_sx == 1 && this.out_sy == 1) {
-            for (var i = 0; i < this.out_depth; i++) {
+        if (this.outSX == 1 && this.outSY == 1) {
+            for (int i = 0; i < this.outDepth; i++) {
                 vol.dw[this.switches[i]] = vol2.dw[i];
             }
         } else {
             // bleh okay, lets do this the hard way
-            var n = 0; // counter for switches
+            int n = 0; // counter for switches
             for (int x = 0; x < vol2.sx; x++) {
                 for (int y = 0; y < vol2.sy; y++) {
-                    for (int i = 0; i < this.out_depth; i++) {
+                    for (int i = 0; i < this.outDepth; i++) {
                         vol.setGrad(x, y, this.switches[n], vol2.getGrad(x, y, i));
                         n++;
                     }

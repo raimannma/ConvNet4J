@@ -1,11 +1,11 @@
 import com.google.gson.JsonObject;
 
 public class PoolLayer extends Layer {
-    private final int in_sy;
-    private final int in_sx;
+    private final int inSY;
+    private final int inSX;
     private int sx;
     private int sy;
-    private int in_depth;
+    private int inDepth;
     private int stride;
     private int pad;
     private int[] switchX;
@@ -18,9 +18,9 @@ public class PoolLayer extends Layer {
     PoolLayer(final LayerConfig opt) {
         // required
         this.sx = opt.getSX();
-        this.in_depth = opt.getInDepth();
-        this.in_sx = opt.getInSX();
-        this.in_sy = opt.getInSY();
+        this.inDepth = opt.getInDepth();
+        this.inSX = opt.getInSX();
+        this.inSY = opt.getInSY();
 
         // optional
         this.sy = LayerConfig.getOrDefault(this.sx, opt.getSY());
@@ -28,31 +28,31 @@ public class PoolLayer extends Layer {
         this.pad = LayerConfig.getOrDefault(0, opt.getPad());
 
         //computed
-        this.out_depth = this.in_depth;
-        this.out_sx = (int) Math.floor((double) (this.in_sx + this.pad * 2 - this.sx) / this.stride + 1);
-        this.out_sx = (int) Math.floor((double) (this.in_sy + this.pad * 2 - this.sy) / this.stride + 1);
+        this.outDepth = this.inDepth;
+        this.outSX = (int) Math.floor((double) (this.inSX + this.pad * 2 - this.sx) / this.stride + 1);
+        this.outSX = (int) Math.floor((double) (this.inSY + this.pad * 2 - this.sy) / this.stride + 1);
         this.type = LayerType.POOL;
 
-        this.switchX = Utils.zerosInt(this.out_sx * this.out_sy * this.out_depth);
-        this.switchY = Utils.zerosInt(this.out_sx * this.out_sy * this.out_depth);
+        this.switchX = Utils.zerosInt(this.outSX * this.outSY * this.outDepth);
+        this.switchY = Utils.zerosInt(this.outSX * this.outSY * this.outDepth);
     }
 
     @Override
     public Vol forward(final Vol vol, final boolean isTraining) {
-        this.in_act = vol;
+        this.inAct = vol;
 
-        final Vol activate = new Vol(this.out_sx, this.out_sy, this.out_depth, 0.0);
+        final Vol activate = new Vol(this.outSX, this.outSY, this.outDepth, 0.0);
 
         int n = 0; // a counter for switches
-        for (int d = 0; d < this.out_depth; d++) {
+        for (int d = 0; d < this.outDepth; d++) {
             int x = -this.pad;
             int y;
-            for (int ax = 0; ax < this.out_sx; x += this.stride, ax++) {
+            for (int ax = 0; ax < this.outSX; x += this.stride, ax++) {
                 y = -this.pad;
-                for (int ay = 0; ay < this.out_sy; y += this.stride, ay++) {
+                for (int ay = 0; ay < this.outSY; y += this.stride, ay++) {
 
                     // convolve centered at this particular location
-                    double max = Double.MIN_VALUE; // hopefully small enough ;\
+                    double max = Double.MIN_VALUE;
                     int winx = -1;
                     int winy = -1;
                     for (int fx = 0; fx < this.sx; fx++) {
@@ -79,8 +79,8 @@ public class PoolLayer extends Layer {
                 }
             }
         }
-        this.out_act = activate;
-        return this.out_act;
+        this.outAct = activate;
+        return this.outAct;
     }
 
     @Override
@@ -94,10 +94,10 @@ public class PoolLayer extends Layer {
         json.addProperty("sx", this.sx);
         json.addProperty("sy", this.sy);
         json.addProperty("stride", this.stride);
-        json.addProperty("in_depth", this.in_depth);
-        json.addProperty("out_depth", this.out_depth);
-        json.addProperty("out_sx", this.out_sx);
-        json.addProperty("out_sy", this.out_sy);
+        json.addProperty("inDepth", this.inDepth);
+        json.addProperty("outDepth", this.outDepth);
+        json.addProperty("outSX", this.outSX);
+        json.addProperty("outSY", this.outSY);
         json.addProperty("type", this.type.toString());
         json.addProperty("pad", this.pad);
         return json;
@@ -105,34 +105,34 @@ public class PoolLayer extends Layer {
 
     @Override
     public void fromJSON(final JsonObject json) {
-        this.out_depth = json.get("out_depth").getAsInt();
-        this.out_sx = json.get("out_sx").getAsInt();
-        this.out_sy = json.get("out_sy").getAsInt();
-        this.type = LayerType.valueOf(json.get("layer_type").getAsString());
+        this.outDepth = json.get("outDepth").getAsInt();
+        this.outSX = json.get("outSX").getAsInt();
+        this.outSY = json.get("outSY").getAsInt();
+        this.type = LayerType.valueOf(json.get("type").getAsString());
         this.sx = json.get("sx").getAsInt();
         this.sy = json.get("sy").getAsInt();
         this.stride = json.get("stride").getAsInt();
-        this.in_depth = json.get("in_depth").getAsInt();
+        this.inDepth = json.get("inDepth").getAsInt();
         this.pad = Double.isNaN(json.get("pad").getAsInt()) ? 0 : json.get("pad").getAsInt(); // backwards compatibility
-        this.switchX = Utils.zerosInt(this.out_sx * this.out_sy * this.out_depth); // need to re-init these appropriately
-        this.switchY = Utils.zerosInt(this.out_sx * this.out_sy * this.out_depth);
+        this.switchX = Utils.zerosInt(this.outSX * this.outSY * this.outDepth); // need to re-init these appropriately
+        this.switchY = Utils.zerosInt(this.outSX * this.outSY * this.outDepth);
     }
 
     @Override
     public double backward(final Vol output) {
         // pooling layers have no parameters, so simply compute
         // gradient wrt data here
-        final Vol vol = this.in_act;
+        final Vol vol = this.inAct;
         vol.dw = Utils.zerosDouble(vol.w.length); // zero out gradient wrt data
 
-        var n = 0;
-        for (int d = 0; d < this.out_depth; d++) {
+        int n = 0;
+        for (int d = 0; d < this.outDepth; d++) {
             int x = -this.pad;
-            for (int ax = 0; ax < this.out_sx; x += this.stride, ax++) {
+            for (int ax = 0; ax < this.outSX; x += this.stride, ax++) {
                 int y = -this.pad;
-                for (int ay = 0; ay < this.out_sy; y += this.stride, ay++) {
-                    final double chain_grad = this.out_act.getGrad(ax, ay, d);
-                    vol.addGrad(this.switchX[n], this.switchY[n], d, chain_grad);
+                for (int ay = 0; ay < this.outSY; y += this.stride, ay++) {
+                    final double chainGrad = this.outAct.getGrad(ax, ay, d);
+                    vol.addGrad(this.switchX[n], this.switchY[n], d, chainGrad);
                     n++;
                 }
             }

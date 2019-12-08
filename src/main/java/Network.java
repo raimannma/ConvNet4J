@@ -87,9 +87,9 @@ class Network {
             final LayerConfig def = layerConfigs.get(i);
             if (i > 0) {
                 final Layer prev = this.layers.get(i - 1);
-                def.inSX = prev.out_sx;
-                def.inSY = prev.out_sy;
-                def.inDepth = prev.out_depth;
+                def.inSX = prev.outSX;
+                def.inSY = prev.outSY;
+                def.inDepth = prev.outDepth;
             }
 
             switch (def.type) {
@@ -133,7 +133,7 @@ class Network {
                     this.layers.add(new SVMLayer(def));
                     break;
                 default:
-                    throw new RuntimeException("ERROR: UNRECOGNIZED LAYER TYPE: " + def.type))
+                    throw new RuntimeException("ERROR: UNRECOGNIZED LAYER TYPE: " + def.type);
             }
         }
     }
@@ -245,7 +245,7 @@ class Network {
             throw new RuntimeException("ERROR: getPrediction function assumes softmax as last layer of the net!");
         }
 
-        final double[] probabilities = lastLayer.out_act.w;
+        final double[] probabilities = lastLayer.outAct.w;
         double maxValue = probabilities[0];
         int maxIndex = 0;
         for (int i = 1; i < probabilities.length; i++) {

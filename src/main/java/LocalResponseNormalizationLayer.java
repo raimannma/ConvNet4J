@@ -5,7 +5,7 @@ public class LocalResponseNormalizationLayer extends Layer {
     private int n;
     private double alpha;
     private double beta;
-    private Vol S_CACHE;
+    private Vol S;
 
     LocalResponseNormalizationLayer() {
         this(new LayerConfig());
@@ -19,9 +19,9 @@ public class LocalResponseNormalizationLayer extends Layer {
         this.beta = opt.getBeta();
 
         //computed
-        this.out_sx = opt.getInSX();
-        this.out_sy = opt.getInSY();
-        this.out_depth = opt.getInDepth();
+        this.outSX = opt.getInSX();
+        this.outSY = opt.getInSY();
+        this.outDepth = opt.getInDepth();
         this.type = LayerType.LRN;
 
         if (this.n % 2 == 0) {
@@ -31,10 +31,10 @@ public class LocalResponseNormalizationLayer extends Layer {
 
     @Override
     public Vol forward(final Vol vol, final boolean isTraining) {
-        this.in_act = vol;
+        this.inAct = vol;
 
         final Vol A = vol.cloneAndZero();
-        this.S_CACHE = vol.cloneAndZero();
+        this.S = vol.cloneAndZero();
         final int n2 = (int) Math.floor((double) this.n / 2);
         for (int x = 0; x < vol.sx; x++) {
             for (int y = 0; y < vol.sy; y++) {
@@ -48,15 +48,15 @@ public class LocalResponseNormalizationLayer extends Layer {
                     }
                     den *= this.alpha / this.n;
                     den += this.k;
-                    this.S_CACHE.set(x, y, i, den); // will be useful for backprop
+                    this.S.set(x, y, i, den); // will be useful for backprop
                     den = Math.pow(den, this.beta);
                     A.set(x, y, i, ai / den);
                 }
             }
         }
 
-        this.out_act = A;
-        return this.out_act; // dummy identity function for now
+        this.outAct = A;
+        return this.outAct; // dummy identity function for now
     }
 
     @Override
@@ -72,9 +72,9 @@ public class LocalResponseNormalizationLayer extends Layer {
         json.addProperty("n", this.n);
         json.addProperty("alpha", this.alpha);
         json.addProperty("beta", this.beta);
-        json.addProperty("out_depth", this.out_depth);
-        json.addProperty("out_sx", this.out_sx);
-        json.addProperty("out_sy", this.out_sy);
+        json.addProperty("outDepth", this.outDepth);
+        json.addProperty("outSX", this.outSX);
+        json.addProperty("outSY", this.outSY);
         json.addProperty("type", this.type.toString());
         return json;
     }
@@ -85,16 +85,16 @@ public class LocalResponseNormalizationLayer extends Layer {
         this.n = json.get("n").getAsInt();
         this.alpha = json.get("alpha").getAsDouble(); // normalize by size
         this.beta = json.get("beta").getAsDouble();
-        this.out_depth = json.get("out_depth").getAsInt();
-        this.out_sx = json.get("out_sx").getAsInt();
-        this.out_sy = json.get("out_sy").getAsInt();
-        this.type = LayerType.valueOf(json.get("layer_type").getAsString());
+        this.outDepth = json.get("outDepth").getAsInt();
+        this.outSX = json.get("outSX").getAsInt();
+        this.outSY = json.get("outSY").getAsInt();
+        this.type = LayerType.valueOf(json.get("type").getAsString());
     }
 
     @Override
     public double backward(final Vol output) {
         // evaluate gradient wrt data
-        final Vol vol = this.in_act; // we need to set dw of this
+        final Vol vol = this.inAct; // we need to set dw of this
         vol.dw = Utils.zerosDouble(vol.w.length); // zero out gradient wrt data
 
         final int n2 = (int) Math.floor((double) this.n / 2);
@@ -102,8 +102,8 @@ public class LocalResponseNormalizationLayer extends Layer {
             for (int y = 0; y < vol.sy; y++) {
                 for (int i = 0; i < vol.depth; i++) {
 
-                    final double chain_grad = this.out_act.getGrad(x, y, i);
-                    final double S = this.S_CACHE.get(x, y, i);
+                    final double chainGrad = this.outAct.getGrad(x, y, i);
+                    final double S = this.S.get(x, y, i);
                     final double SB = Math.pow(S, this.beta);
                     final double SB2 = SB * SB;
 
@@ -115,7 +115,7 @@ public class LocalResponseNormalizationLayer extends Layer {
                             g += SB;
                         }
                         g /= SB2;
-                        g *= chain_grad;
+                        g *= chainGrad;
                         vol.addGrad(x, y, j, g);
                     }
                 }

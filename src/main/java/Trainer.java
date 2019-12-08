@@ -66,14 +66,14 @@ public class Trainer {
 
                 final double l1DecayMul = Double.isNaN(pg.l1DecayMul) ? 1 : pg.l1DecayMul;
                 final double l2DecayMul = Double.isNaN(pg.l2DecayMul) ? 1 : pg.l2DecayMul;
-                final double l1_decay = this.l1Decay * l1DecayMul;
-                final double l2_decay = this.l2Decay * l2DecayMul;
+                final double l1Decay = this.l1Decay * l1DecayMul;
+                final double l2Decay = this.l2Decay * l2DecayMul;
 
                 for (int j = 0; j < p.length; j++) {
-                    l2DecayLoss += l2_decay * p[j] * p[j] / 2; // accumulate weight decay loss
-                    l1DecayLoss += l1_decay * Math.abs(p[j]);
-                    final double l1grad = l1_decay * (p[j] > 0 ? 1 : -1);
-                    final double l2grad = l2_decay * (p[j]);
+                    l2DecayLoss += l2Decay * p[j] * p[j] / 2; // accumulate weight decay loss
+                    l1DecayLoss += l1Decay * Math.abs(p[j]);
+                    final double l1grad = l1Decay * (p[j] > 0 ? 1 : -1);
+                    final double l2grad = l2Decay * (p[j]);
 
                     final double gij = (l2grad + l1grad + g[j]) / this.batchSize; // raw batch gradient
 

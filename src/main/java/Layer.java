@@ -1,11 +1,11 @@
 import com.google.gson.JsonObject;
 
 abstract class Layer {
-    public Vol out_act;
-    public Vol in_act;
-    public int out_sx;
-    public int out_sy;
-    public int out_depth;
+    public Vol outAct;
+    public Vol inAct;
+    public int outSX;
+    public int outSY;
+    public int outDepth;
     LayerType type;
 
     public Vol forward(final Vol vol) {
