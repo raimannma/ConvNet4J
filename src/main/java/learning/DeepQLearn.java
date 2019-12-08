@@ -1,3 +1,12 @@
+package learning;
+
+import enums.ActivationType;
+import layers.Layer;
+import layers.LayerConfig;
+import utils.Utils;
+import utils.Vol;
+import utils.Window;
+
 import java.util.*;
 
 public class DeepQLearn {

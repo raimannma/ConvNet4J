@@ -1,14 +1,18 @@
-class LayerConfig {
-    int numClasses;
-    ActivationType activation;
-    Layer.LayerType type;
-    int inSX;
-    int inSY;
-    int inDepth;
-    double dropProb;
-    double biasPref;
-    int groupSize;
-    int numNeurons;
+package layers;
+
+import enums.ActivationType;
+
+public class LayerConfig {
+    public int numClasses;
+    public ActivationType activation;
+    public Layer.LayerType type;
+    public int inSX;
+    public int inSY;
+    public int inDepth;
+    public double dropProb;
+    public double biasPref;
+    public int groupSize;
+    public int numNeurons;
     private int filters;
     private int sx;
     private int sy;
@@ -95,7 +99,7 @@ class LayerConfig {
         return this.dropProb;
     }
 
-    void setDropProb(final double dropProb) {
+    public void setDropProb(final double dropProb) {
         this.dropProb = dropProb;
     }
 
@@ -111,7 +115,7 @@ class LayerConfig {
         return this.groupSize;
     }
 
-    void setGroupSize(final int groupSize) {
+    public void setGroupSize(final int groupSize) {
         this.groupSize = groupSize;
     }
 
@@ -119,7 +123,7 @@ class LayerConfig {
         return this.numNeurons;
     }
 
-    void setNumNeurons(final int numNeurons) {
+    public void setNumNeurons(final int numNeurons) {
         this.numNeurons = numNeurons;
     }
 

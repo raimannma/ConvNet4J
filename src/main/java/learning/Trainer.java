@@ -1,6 +1,13 @@
+package learning;
+
+import enums.TrainerMethod;
+import utils.ParamsAndGrads;
+import utils.Utils;
+import utils.Vol;
+
 import java.util.*;
 
-public class Trainer {
+class Trainer {
 
     private final Network net;
     private final double learningRate;
@@ -17,7 +24,7 @@ public class Trainer {
     private final TrainerMethod method;
     private double k;
 
-    public Trainer(final Network network, final TrainerOptions options) {
+    Trainer(final Network network, final TrainerOptions options) {
         this.net = network;
         this.learningRate = options.getLearningRate();
         this.l1Decay = options.getL1Decay();
@@ -37,7 +44,7 @@ public class Trainer {
 
     }
 
-    public Map<String, Double> train(final Vol x, final Vol y) {
+    Map<String, Double> train(final Vol x, final Vol y) {
         this.net.forward(x, true);
 
         final double costLoss = this.net.backward(y);

@@ -1,16 +1,21 @@
+package layers;
+
 import com.google.gson.JsonObject;
+import utils.ParamsAndGrads;
+import utils.Utils;
+import utils.Vol;
 
 public class TanhLayer extends Layer {
-    TanhLayer() {
+    public TanhLayer() {
         this(new LayerConfig());
     }
 
-    TanhLayer(final LayerConfig opt) {
+    public TanhLayer(final LayerConfig opt) {
         //computed
         this.outSX = opt.getInSX();
         this.outSY = opt.getInSY();
         this.outDepth = opt.getInDepth();
-        this.type = LayerType.TANH;
+        this.type = Layer.LayerType.TANH;
     }
 
     @Override
@@ -44,7 +49,7 @@ public class TanhLayer extends Layer {
         this.outDepth = json.get("outDepth").getAsInt();
         this.outSX = json.get("outSX").getAsInt();
         this.outSY = json.get("outSY").getAsInt();
-        this.type = LayerType.valueOf(json.get("type").getAsString());
+        this.type = Layer.LayerType.valueOf(json.get("type").getAsString());
     }
 
     @Override

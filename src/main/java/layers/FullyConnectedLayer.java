@@ -1,5 +1,10 @@
+package layers;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import utils.ParamsAndGrads;
+import utils.Utils;
+import utils.Vol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +16,11 @@ public class FullyConnectedLayer extends Layer {
     private double l2DecayMul;
     private int numInputs;
 
-    FullyConnectedLayer() {
+    public FullyConnectedLayer() {
         this(new LayerConfig());
     }
 
-    FullyConnectedLayer(final LayerConfig opt) {
+    public FullyConnectedLayer(final LayerConfig opt) {
         // required
         this.outDepth = LayerConfig.getOrDefault(opt.getNumNeurons(), opt.getFilters());
 
@@ -119,7 +124,7 @@ public class FullyConnectedLayer extends Layer {
     @Override
     public double backward(final Vol output) {
         final Vol V = this.inAct;
-        V.dw = Utils.zerosDouble(V.w.length); // zero out the gradient in input Vol
+        V.dw = Utils.zerosDouble(V.w.length); // zero out the gradient in input utils.Vol
 
         // compute gradient wrt weights and data
         for (int i = 0; i < this.outDepth; i++) {

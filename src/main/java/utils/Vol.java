@@ -1,14 +1,16 @@
+package utils;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.Arrays;
 
 public class Vol implements Cloneable {
-    final int sx;
-    final int sy;
-    final int depth;
-    double[] w;
-    double[] dw;
+    public final int sx;
+    public final int sy;
+    public final int depth;
+    public double[] w;
+    public double[] dw;
 
     public Vol(final double[] sx) {
         this.sx = 1;
@@ -99,15 +101,15 @@ public class Vol implements Cloneable {
         return out;
     }
 
-    void set(final int x, final int y, final int depth, final double val) {
+    public void set(final int x, final int y, final int depth, final double val) {
         this.w[this.getIndex(x, y, depth)] = val;
     }
 
-    double get(final int x, final int y, final int depth) {
+    public double get(final int x, final int y, final int depth) {
         return this.w[this.getIndex(x, y, depth)];
     }
 
-    Vol cloneAndZero() {
+    public Vol cloneAndZero() {
         return new Vol(this.sx, this.sy, this.depth, 0);
     }
 
@@ -127,15 +129,15 @@ public class Vol implements Cloneable {
         this.w[this.getIndex(x, y, depth)] += val;
     }
 
-    double getGrad(final int x, final int y, final int depth) {
+    public double getGrad(final int x, final int y, final int depth) {
         return this.dw[this.getIndex(x, y, depth)];
     }
 
-    void setGrad(final int x, final int y, final int depth, final double val) {
+    public void setGrad(final int x, final int y, final int depth, final double val) {
         this.dw[this.getIndex(x, y, depth)] = val;
     }
 
-    void addGrad(final int x, final int y, final int depth, final double val) {
+    public void addGrad(final int x, final int y, final int depth, final double val) {
         this.dw[this.getIndex(x, y, depth)] += val;
     }
 

@@ -1,4 +1,9 @@
+package layers;
+
 import com.google.gson.JsonObject;
+import utils.ParamsAndGrads;
+import utils.Utils;
+import utils.Vol;
 
 public class LocalResponseNormalizationLayer extends Layer {
     private int k;
@@ -7,11 +12,11 @@ public class LocalResponseNormalizationLayer extends Layer {
     private double beta;
     private Vol S;
 
-    LocalResponseNormalizationLayer() {
+    public LocalResponseNormalizationLayer() {
         this(new LayerConfig());
     }
 
-    LocalResponseNormalizationLayer(final LayerConfig opt) {
+    public LocalResponseNormalizationLayer(final LayerConfig opt) {
         //required
         this.k = opt.getK();
         this.n = opt.getN();

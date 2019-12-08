@@ -1,10 +1,15 @@
+package layers;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import utils.ParamsAndGrads;
+import utils.Utils;
+import utils.Vol;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class ConvolutionalLayer extends Layer {
+public class ConvolutionalLayer extends Layer {
     private Vol biases;
     private int pad;
     private double l1DecayMul;
@@ -16,11 +21,11 @@ class ConvolutionalLayer extends Layer {
     private int stride;
 
 
-    ConvolutionalLayer() {
+    public ConvolutionalLayer() {
         this(new LayerConfig());
     }
 
-    ConvolutionalLayer(final LayerConfig opt) {
+    public ConvolutionalLayer(final LayerConfig opt) {
         //required
         this.outDepth = opt.getFilters();
         this.sx = opt.getSX();
@@ -41,7 +46,7 @@ class ConvolutionalLayer extends Layer {
         // final application.
         this.outSX = (int) Math.floor((double) (inSX + this.pad * 2 - this.sx) / this.stride + 1);
         this.outSY = (int) Math.floor((double) (inSY + this.pad * 2 - this.sy) / this.stride + 1);
-        this.type = LayerType.CONVOLUTIONAL;
+        this.type = Layer.LayerType.CONVOLUTIONAL;
 
         final double bias = LayerConfig.getOrDefault(0, opt.getBiasPref());
         this.filters = new ArrayList<>();
@@ -144,7 +149,7 @@ class ConvolutionalLayer extends Layer {
         this.outDepth = json.get("outDepth").getAsInt();
         this.outSX = json.get("outSX").getAsInt();
         this.outSY = json.get("outSY").getAsInt();
-        this.type = LayerType.valueOf(json.get("type").getAsString());
+        this.type = Layer.LayerType.valueOf(json.get("type").getAsString());
         this.sx = json.get("sx").getAsInt(); // filter size in x, y dims
         this.sy = json.get("sy").getAsInt();
         this.stride = json.get("stride").getAsInt();

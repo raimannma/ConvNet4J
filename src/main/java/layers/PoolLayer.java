@@ -1,4 +1,9 @@
+package layers;
+
 import com.google.gson.JsonObject;
+import utils.ParamsAndGrads;
+import utils.Utils;
+import utils.Vol;
 
 public class PoolLayer extends Layer {
     private int sx;
@@ -9,11 +14,11 @@ public class PoolLayer extends Layer {
     private int[] switchX;
     private int[] switchY;
 
-    PoolLayer() {
+    public PoolLayer() {
         this(new LayerConfig());
     }
 
-    PoolLayer(final LayerConfig opt) {
+    public PoolLayer(final LayerConfig opt) {
         // required
         this.sx = opt.getSX();
         this.inDepth = opt.getInDepth();
@@ -29,7 +34,7 @@ public class PoolLayer extends Layer {
         this.outDepth = this.inDepth;
         this.outSX = (int) Math.floor((double) (inSX + this.pad * 2 - this.sx) / this.stride + 1);
         this.outSX = (int) Math.floor((double) (inSY + this.pad * 2 - this.sy) / this.stride + 1);
-        this.type = LayerType.POOL;
+        this.type = Layer.LayerType.POOL;
 
         this.switchX = Utils.zerosInt(this.outSX * this.outSY * this.outDepth);
         this.switchY = Utils.zerosInt(this.outSX * this.outSY * this.outDepth);
@@ -106,7 +111,7 @@ public class PoolLayer extends Layer {
         this.outDepth = json.get("outDepth").getAsInt();
         this.outSX = json.get("outSX").getAsInt();
         this.outSY = json.get("outSY").getAsInt();
-        this.type = LayerType.valueOf(json.get("type").getAsString());
+        this.type = Layer.LayerType.valueOf(json.get("type").getAsString());
         this.sx = json.get("sx").getAsInt();
         this.sy = json.get("sy").getAsInt();
         this.stride = json.get("stride").getAsInt();

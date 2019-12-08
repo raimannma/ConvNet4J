@@ -1,11 +1,13 @@
+package utils;
+
 import java.util.ArrayList;
 import java.util.List;
 
-class Window<T> {
+public class Window<T> {
     private final ArrayList<T> values;
     private final int windowSize;
 
-    Window(final int windowSize) {
+    public Window(final int windowSize) {
         this.values = new ArrayList<>();
         this.windowSize = windowSize;
     }
@@ -16,7 +18,7 @@ class Window<T> {
         }
     }
 
-    void add(final T elem) {
+    public void add(final T elem) {
         if (this.values.size() >= this.windowSize) {
             this.values.remove(0);
         }
@@ -29,7 +31,7 @@ class Window<T> {
         }
     }
 
-    T get(final int index) {
+    public T get(final int index) {
         return this.values.get(index);
     }
 

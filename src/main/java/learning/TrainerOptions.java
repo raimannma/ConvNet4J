@@ -1,3 +1,7 @@
+package learning;
+
+import enums.TrainerMethod;
+
 class TrainerOptions {
     double learningRate;
     double l2Decay;

@@ -1,14 +1,19 @@
+package layers;
+
 import com.google.gson.JsonObject;
+import utils.ParamsAndGrads;
+import utils.Utils;
+import utils.Vol;
 
 public class MaxoutLayer extends Layer {
     private int[] switches;
     private int groupSize;
 
-    MaxoutLayer() {
+    public MaxoutLayer() {
         this(new LayerConfig());
     }
 
-    MaxoutLayer(final LayerConfig opt) {
+    public MaxoutLayer(final LayerConfig opt) {
         // required
         this.groupSize = LayerConfig.getOrDefault(2, opt.getGroupSize());
 

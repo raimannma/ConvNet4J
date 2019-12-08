@@ -1,4 +1,9 @@
+package layers;
+
 import com.google.gson.JsonObject;
+import utils.ParamsAndGrads;
+import utils.Utils;
+import utils.Vol;
 
 import java.util.Arrays;
 
@@ -6,11 +11,11 @@ public class DropoutLayer extends Layer {
     private final boolean[] dropped;
     private double dropProb;
 
-    DropoutLayer() {
+    public DropoutLayer() {
         this(new LayerConfig());
     }
 
-    DropoutLayer(final LayerConfig opt) {
+    public DropoutLayer(final LayerConfig opt) {
         this.outSX = opt.getOutSX();
         this.outSY = opt.getOutSY();
         this.outDepth = opt.getOutDepth();

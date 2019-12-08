@@ -1,12 +1,16 @@
-import com.google.gson.JsonObject;
+package layers;
 
-abstract class Layer {
+import com.google.gson.JsonObject;
+import utils.ParamsAndGrads;
+import utils.Vol;
+
+public abstract class Layer {
     public Vol outAct;
     public Vol inAct;
     public int outSX;
     public int outSY;
     public int outDepth;
-    LayerType type;
+    public LayerType type;
 
     public Vol forward(final Vol vol) {
         return this.forward(vol, false);

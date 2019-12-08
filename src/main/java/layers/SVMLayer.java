@@ -1,19 +1,24 @@
-import com.google.gson.JsonObject;
+package layers;
 
-public class RegressionLayer extends Layer {
+import com.google.gson.JsonObject;
+import utils.ParamsAndGrads;
+import utils.Utils;
+import utils.Vol;
+
+public class SVMLayer extends Layer {
     private int numInputs;
 
-    RegressionLayer() {
+    public SVMLayer() {
         this(new LayerConfig());
     }
 
-    RegressionLayer(final LayerConfig opt) {
-        //computed
+    public SVMLayer(final LayerConfig opt) {
+        // computed
         this.numInputs = opt.getInSX() * opt.getInSY() * opt.getInDepth();
         this.outDepth = this.numInputs;
         this.outSX = 1;
         this.outSY = 1;
-        this.type = LayerType.REGRESSION;
+        this.type = Layer.LayerType.SVM;
     }
 
     @Override
@@ -44,7 +49,7 @@ public class RegressionLayer extends Layer {
         this.outDepth = json.get("outDepth").getAsInt();
         this.outSX = json.get("outSX").getAsInt();
         this.outSY = json.get("outSY").getAsInt();
-        this.type = LayerType.valueOf(json.get("type").getAsString());
+        this.type = Layer.LayerType.valueOf(json.get("type").getAsString());
         this.numInputs = json.get("numInputs").getAsInt();
     }
 
@@ -52,27 +57,21 @@ public class RegressionLayer extends Layer {
     public double backward(final Vol output) {
         final Vol x = this.inAct;
         x.dw = Utils.zerosDouble(x.w.length);
+
+        final int y = (int) output.get(0, 0, 0);
+        final double yScore = x.w[y];
+        final double margin = 1;
         double loss = 0;
-        if (output.sx == 1 && output.sy == 1 && output.depth == 1) {
-            //single number
-            final double y = output.get(0, 0, 0);
-            final double dy = x.w[0] - y;
-            x.dw[0] = dy;
-            loss += 0.5 * dy * dy;
-        } else if (output.sx == 1 && output.sy == 1 && output.depth == 2) {
-            final int i = (int) output.get(0, 0, 0);
-            final double y = output.get(0, 0, 1);
-            final double dy = x.w[i] - y;
-            x.dw[i] = dy;
-            loss += 0.5 * dy * dy;
-        } else if (output.sx == 1 && output.sy == 1) {
-            for (int i = 0; i < this.outDepth; i++) {
-                final double dy = x.w[i] - output.get(0, 0, i);
-                x.dw[i] = dy;
-                loss += 0.5 * dy * dy;
+        for (int i = 0; i < this.outDepth; i++) {
+            if (y == i) {
+                continue;
             }
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Bad structure!");
+            final double yDiff = -yScore + x.w[i] + margin;
+            if (yDiff > 0) {
+                x.dw[i]++;
+                x.dw[y]--;
+                loss += yDiff;
+            }
         }
         return loss;
     }

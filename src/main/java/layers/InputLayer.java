@@ -1,25 +1,31 @@
-import com.google.gson.JsonObject;
+package layers;
 
-public class SigmoidLayer extends Layer {
-    SigmoidLayer() {
+import com.google.gson.JsonObject;
+import utils.ParamsAndGrads;
+import utils.Vol;
+
+public class InputLayer extends Layer {
+
+    public InputLayer() {
         this(new LayerConfig());
     }
 
-    SigmoidLayer(final LayerConfig opt) {
-        this.outSX = opt.getInSX();
-        this.outSY = opt.getInSY();
-        this.outDepth = opt.getInDepth();
-        this.type = LayerType.SIGMOID;
+    public InputLayer(final LayerConfig opt) {
+        // required
+        this.outDepth = LayerConfig.getOrDefault(0, opt.getOutDepth(), opt.getInDepth(), opt.getDepth());
+
+        // optional
+        this.outSX = LayerConfig.getOrDefault(1, opt.getOutSX(), opt.getSX());
+        this.outSY = LayerConfig.getOrDefault(1, opt.getOutSY(), opt.getSY());
+
+        // computed
+        this.type = LayerType.INPUT;
     }
 
     @Override
     public Vol forward(final Vol vol, final boolean isTraining) {
         this.inAct = vol;
-        final Vol vol2 = vol.cloneAndZero();
-        for (int i = 0; i < vol.w.length; i++) {
-            vol2.w[i] = 1 / (1 + Math.exp(-vol.w[i]));
-        }
-        this.outAct = vol2;
+        this.outAct = vol;
         return this.outAct;
     }
 
@@ -43,18 +49,11 @@ public class SigmoidLayer extends Layer {
         this.outDepth = json.get("outDepth").getAsInt();
         this.outSX = json.get("outSX").getAsInt();
         this.outSY = json.get("outSY").getAsInt();
-        this.type = LayerType.valueOf(json.get("type").getAsString());
+        this.type = LayerType.valueOf(json.get("type").toString());
     }
 
     @Override
     public double backward(final Vol output) {
-        final Vol vol = this.inAct; // we need to set dw of this
-        final Vol vol2 = this.outAct;
-        vol.dw = Utils.zerosDouble(vol.w.length); // zero out gradient wrt data
-        for (int i = 0; i < vol.w.length; i++) {
-            final double v2wi = vol2.w[i];
-            vol.dw[i] = v2wi * (1.0 - v2wi) * vol2.dw[i];
-        }
         return 0;
     }
 }

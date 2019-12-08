@@ -1,5 +1,11 @@
+package learning;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import enums.ActivationType;
+import layers.*;
+import utils.ParamsAndGrads;
+import utils.Vol;
 
 import java.util.ArrayList;
 import java.util.Arrays;
