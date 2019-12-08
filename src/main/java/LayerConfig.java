@@ -15,6 +15,7 @@ class LayerConfig {
     private double l1_decay_mul;
     private double l2_decay_mul;
     private int numNeurons;
+    private double dropProb;
 
     static double getOrDefault(final double value, final double defaultValue) {
         return Double.isNaN(value) ? defaultValue : value;
@@ -88,7 +89,7 @@ class LayerConfig {
         this.in_depth = in_depth;
     }
 
-    public int getOutSX() {
+    int getOutSX() {
         return this.out_sx;
     }
 
@@ -96,7 +97,7 @@ class LayerConfig {
         this.out_sx = out_sx;
     }
 
-    public int getOutSY() {
+    int getOutSY() {
         return this.out_sy;
     }
 
@@ -104,7 +105,7 @@ class LayerConfig {
         this.out_sy = out_sy;
     }
 
-    public int getOutDepth() {
+    int getOutDepth() {
         return this.out_depth;
     }
 
@@ -146,5 +147,9 @@ class LayerConfig {
 
     int getNumNeurons() {
         return this.numNeurons;
+    }
+
+    double getDropProb() {
+        return this.dropProb;
     }
 }

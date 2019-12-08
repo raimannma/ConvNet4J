@@ -7,6 +7,10 @@ abstract class Layer {
     public int out_depth;
     LayerType type;
 
+    public Vol forward(final Vol vol) {
+        return this.forward(vol, false);
+    }
+
     public abstract Vol forward(Vol vol, boolean isTraining);
 
     public abstract ParamsAndGrads[] getParamsAndGrads();
