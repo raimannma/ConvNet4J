@@ -1,21 +1,22 @@
 class LayerConfig {
+    Activation.ActivationType activation;
     Layer.LayerType type;
-    int in_sx;
-    int in_sy;
-    int in_depth;
+    int inSX;
+    int inSY;
+    int inDepth;
+    double dropProb;
+    double biasPref;
     private int filters;
-    private double biasPref;
     private int sx;
     private int sy;
-    private int out_sx;
-    private int out_sy;
+    private int outSX;
+    private int outSY;
     private int out_depth;
     private int stride;
     private int pad;
-    private double l1_decay_mul;
-    private double l2_decay_mul;
+    private double l1DecayMul;
+    private double l2DecayMul;
     private int numNeurons;
-    private double dropProb;
     private int depth;
 
     static double getOrDefault(final double defaultValue, final double... values) {
@@ -77,43 +78,43 @@ class LayerConfig {
     }
 
     int getInSX() {
-        return this.in_sx;
+        return this.inSX;
     }
 
     public void setInSX(final int in_sx) {
-        this.in_sx = in_sx;
+        this.inSX = in_sx;
     }
 
     int getInSY() {
-        return this.in_sy;
+        return this.inSY;
     }
 
     public void setInSY(final int in_sy) {
-        this.in_sy = in_sy;
+        this.inSY = in_sy;
     }
 
     int getInDepth() {
-        return this.in_depth;
+        return this.inDepth;
     }
 
     public void setInDepth(final int in_depth) {
-        this.in_depth = in_depth;
+        this.inDepth = in_depth;
     }
 
     int getOutSX() {
-        return this.out_sx;
+        return this.outSX;
     }
 
     public void setOutSX(final int out_sx) {
-        this.out_sx = out_sx;
+        this.outSX = out_sx;
     }
 
     int getOutSY() {
-        return this.out_sy;
+        return this.outSY;
     }
 
     public void setOutSY(final int out_sy) {
-        this.out_sy = out_sy;
+        this.outSY = out_sy;
     }
 
     int getOutDepth() {
@@ -141,19 +142,19 @@ class LayerConfig {
     }
 
     double getL1DecayMul() {
-        return this.l1_decay_mul;
+        return this.l1DecayMul;
     }
 
     public void setL1DecayMul(final double l1_decay_mul) {
-        this.l1_decay_mul = l1_decay_mul;
+        this.l1DecayMul = l1_decay_mul;
     }
 
     double getL2DecayMul() {
-        return this.l2_decay_mul;
+        return this.l2DecayMul;
     }
 
     public void setL2DecayMul(final double l2_decay_mul) {
-        this.l2_decay_mul = l2_decay_mul;
+        this.l2DecayMul = l2_decay_mul;
     }
 
     int getNumNeurons() {
@@ -162,6 +163,10 @@ class LayerConfig {
 
     double getDropProb() {
         return this.dropProb;
+    }
+
+    void setDropProb(final double dropProb) {
+        this.dropProb = dropProb;
     }
 
     int getDepth() {

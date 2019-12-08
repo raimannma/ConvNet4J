@@ -122,7 +122,7 @@ class ConvolutionalLayer extends Layer {
     }
 
     @Override
-    JsonObject toJSON() {
+    public JsonObject toJSON() {
         final JsonObject json = new JsonObject();
         json.addProperty("sx", this.sx);
         json.addProperty("sy", this.sy);
@@ -146,7 +146,7 @@ class ConvolutionalLayer extends Layer {
     }
 
     @Override
-    void fromJSON(final JsonObject json) {
+    public void fromJSON(final JsonObject json) {
         this.out_depth = json.get("out_depth").getAsInt();
         this.out_sx = json.get("out_sx").getAsInt();
         this.out_sy = json.get("out_sy").getAsInt();

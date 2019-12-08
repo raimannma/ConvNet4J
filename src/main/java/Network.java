@@ -40,10 +40,10 @@ class Network {
                 layerConfigs.add(config);
             }
 
-            if ((def.type == Layer.LayerType.FC || def.type == Layer.LayerType.CONVOLUTIONAL) && Double.isNaN(def.bias_pref)) {
-                def.bias_pref = 0.0;
-                if (def.activation != null && def.activation == ActivationType.RELU) {
-                    def.bias_pref = 0.1; // relus like a bit of positive bias to get gradients early
+            if ((def.type == Layer.LayerType.FC || def.type == Layer.LayerType.CONVOLUTIONAL) && Double.isNaN(def.biasPref)) {
+                def.biasPref = 0.0;
+                if (def.activation == Activation.ActivationType.RELU) {
+                    def.biasPref = 0.1; // relus like a bit of positive bias to get gradients early
                     // otherwise it's technically possible that a relu unit will never turn on (by chance)
                     // and will never get any gradient and never contribute any computation. Dead relu.
                 }
@@ -52,19 +52,19 @@ class Network {
             layerConfigs.add(def);
 
             if (def.activation != null) {
-                if (def.activation == ActivationType.RELU) {
+                if (def.activation == Activation.ActivationType.RELU) {
                     final LayerConfig config = new LayerConfig();
                     config.setType(Layer.LayerType.RELU);
                     layerConfigs.add(config);
-                } else if (def.activation == ActivationType.SIGMOID) {
+                } else if (def.activation == Activation.ActivationType.SIGMOID) {
                     final LayerConfig config = new LayerConfig();
                     config.setType(Layer.LayerType.SIGMOID);
                     layerConfigs.add(config);
-                } else if (def.activation == ActivationType.TANH) {
+                } else if (def.activation == Activation.ActivationType.TANH) {
                     final LayerConfig config = new LayerConfig();
                     config.setType(Layer.LayerType.TANH);
                     layerConfigs.add(config);
-                } else if (def.activation == ActivationType.MAXOUT) {
+                } else if (def.activation == Activation.ActivationType.MAXOUT) {
                     final LayerConfig config = new LayerConfig();
                     config.setType(Layer.LayerType.MAXOUT);
                     config.setGroupSize(Double.isNaN(def.group_size) ? 2 : def.group_size);
@@ -73,10 +73,10 @@ class Network {
                     throw new RuntimeException("ERROR unsupported activation " + def.activation.toString());
                 }
             }
-            if (!Double.isNaN(def.drop_prob) && def.type != Layer.LayerType.DROPOUT) {
+            if (!Double.isNaN(def.dropProb) && def.type != Layer.LayerType.DROPOUT) {
                 final LayerConfig config = new LayerConfig();
                 config.setType(Layer.LayerType.DROPOUT);
-                config.setDropProb(def.drop_prob);
+                config.setDropProb(def.dropProb);
                 layerConfigs.add(config);
             }
         }
@@ -87,9 +87,9 @@ class Network {
             final LayerConfig def = layerConfigs.get(i);
             if (i > 0) {
                 final Layer prev = this.layers.get(i - 1);
-                def.in_sx = prev.out_sx;
-                def.in_sy = prev.out_sy;
-                def.in_depth = prev.out_depth;
+                def.inSX = prev.out_sx;
+                def.inSY = prev.out_sy;
+                def.inDepth = prev.out_depth;
             }
 
             switch (def.type) {
