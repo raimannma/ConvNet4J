@@ -222,8 +222,8 @@ class Network {
         return loss;
     }
 
-    public void forward(final Vol input) {
-        this.forward(input, false);
+    public Vol forward(final Vol input) {
+        return this.forward(input, false);
     }
 
     public Vol forward(final Vol vol, final boolean isTraining) {

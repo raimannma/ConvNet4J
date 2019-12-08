@@ -1,10 +1,10 @@
 class TrainerOptions {
-    private double learningRate;
+    double learningRate;
+    double l2Decay;
+    double batchSize;
+    double momentum;
     private double l1Decay;
-    private double l2Decay;
-    private double batchSize;
     private TrainerMethod method;
-    private double momentum;
     private double ro;
     private double epsilon;
     private double beta1;

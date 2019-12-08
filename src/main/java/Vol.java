@@ -6,8 +6,8 @@ import java.util.Arrays;
 public class Vol implements Cloneable {
     final int sx;
     final int sy;
-    final double[] w;
     final int depth;
+    double[] w;
     double[] dw;
 
     public Vol(final double[] sx) {
@@ -99,7 +99,7 @@ public class Vol implements Cloneable {
         return out;
     }
 
-    public void set(final int x, final int y, final int depth, final double val) {
+    void set(final int x, final int y, final int depth, final double val) {
         this.w[this.getIndex(x, y, depth)] = val;
     }
 
