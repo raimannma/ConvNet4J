@@ -16,13 +16,24 @@ class LayerConfig {
     private double l2_decay_mul;
     private int numNeurons;
     private double dropProb;
+    private int depth;
 
-    static double getOrDefault(final double value, final double defaultValue) {
-        return Double.isNaN(value) ? defaultValue : value;
+    static double getOrDefault(final double defaultValue, final double... values) {
+        for (final double value : values) {
+            if (!Double.isNaN(value)) {
+                return value;
+            }
+        }
+        return defaultValue;
     }
 
-    static int getOrDefault(final int value, final int defaultValue) {
-        return Double.isNaN(value) ? defaultValue : value;
+    static int getOrDefault(final int defaultValue, final int... values) {
+        for (final int value : values) {
+            if (!Double.isNaN(value)) {
+                return value;
+            }
+        }
+        return defaultValue;
     }
 
     int getFilters() {
@@ -151,5 +162,9 @@ class LayerConfig {
 
     double getDropProb() {
         return this.dropProb;
+    }
+
+    int getDepth() {
+        return this.depth;
     }
 }

@@ -38,8 +38,8 @@ class ConvolutionalLayer extends Layer {
         this.sy = LayerConfig.getOrDefault(opt.getSY(), this.sx);
         this.stride = LayerConfig.getOrDefault(opt.getStride(), 1); // stride at which we apply filters to input volume
         this.pad = LayerConfig.getOrDefault(opt.getPad(), 0); // amount of 0 padding to add around borders of input volume
-        this.l1_decay_mul = LayerConfig.getOrDefault(opt.getL1DecayMul(), 0);
-        this.l2_decay_mul = LayerConfig.getOrDefault(opt.getL2DecayMul(), 1);
+        this.l1_decay_mul = LayerConfig.getOrDefault(0, opt.getL1DecayMul());
+        this.l2_decay_mul = LayerConfig.getOrDefault(1, opt.getL2DecayMul());
 
         // computed
         // note we are doing floor, so if the strided convolution of the filter doesnt fit into the input
@@ -49,7 +49,7 @@ class ConvolutionalLayer extends Layer {
         this.out_sy = (int) Math.floor((double) (this.in_sy + this.pad * 2 - this.sy) / this.stride + 1);
         this.type = LayerType.CONVOLUTIONAL;
 
-        final double bias = LayerConfig.getOrDefault(opt.getBiasPref(), 0);
+        final double bias = LayerConfig.getOrDefault(0, opt.getBiasPref());
         this.filters = new ArrayList<>();
         for (int i = 0; i < this.out_depth; i++) {
             this.filters.add(new Vol(this.sx, this.sy, this.in_depth));

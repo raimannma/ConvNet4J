@@ -22,8 +22,8 @@ public class FullyConnectedLayer extends Layer {
 
 
         // optional
-        this.l1_decay_mul = LayerConfig.getOrDefault(opt.getL1DecayMul(), 0);
-        this.l2_decay_mul = LayerConfig.getOrDefault(opt.getL2DecayMul(), 1);
+        this.l1_decay_mul = LayerConfig.getOrDefault(0, opt.getL1DecayMul());
+        this.l2_decay_mul = LayerConfig.getOrDefault(1, opt.getL2DecayMul());
 
         //computed
         this.numInputs = opt.getInSX() * opt.getInSY() * opt.getInDepth();
@@ -32,7 +32,7 @@ public class FullyConnectedLayer extends Layer {
         this.type = LayerType.FC;
 
         //init
-        final double bias = LayerConfig.getOrDefault(opt.getBiasPref(), 0);
+        final double bias = LayerConfig.getOrDefault(0, opt.getBiasPref());
         this.filters = new ArrayList<>();
         for (int i = 0; i < this.out_depth; i++) {
             this.filters.add(new Vol(1, 1, this.numInputs));

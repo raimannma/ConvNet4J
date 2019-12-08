@@ -16,7 +16,7 @@ public class DropoutLayer extends Layer {
         this.out_sy = opt.getOutSY();
         this.out_depth = opt.getOutDepth();
         this.type = LayerType.DROPOUT;
-        this.dropProb = LayerConfig.getOrDefault(opt.getDropProb(), 0.5);
+        this.dropProb = LayerConfig.getOrDefault(0.5, opt.getDropProb());
         this.dropped = new boolean[this.out_sx * this.out_sy * this.out_depth];
         Arrays.fill(this.dropped, false);
     }
