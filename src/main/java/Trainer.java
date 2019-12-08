@@ -14,7 +14,6 @@ public class Trainer {
     private final double beta2;
     private final List<List<Double>> gSum;
     private final List<List<Double>> xSum;
-    private final boolean regression;
     private final TrainerMethod method;
     private double k;
 
@@ -36,7 +35,6 @@ public class Trainer {
         this.gSum = new ArrayList<>();
         this.xSum = new ArrayList<>();
 
-        this.regression = this.net.layers.get(this.net.layers.size() - 1).type == LayerType.REGRESSION;
     }
 
     public Map<String, Double> train(final Vol x, final Vol y) {
