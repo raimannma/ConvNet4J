@@ -14,6 +14,7 @@ class LayerConfig {
     private int pad;
     private double l1_decay_mul;
     private double l2_decay_mul;
+    private int numNeurons;
 
     static double getOrDefault(final double value, final double defaultValue) {
         return Double.isNaN(value) ? defaultValue : value;
@@ -141,5 +142,9 @@ class LayerConfig {
 
     public void setL2DecayMul(final double l2_decay_mul) {
         this.l2_decay_mul = l2_decay_mul;
+    }
+
+    int getNumNeurons() {
+        return this.numNeurons;
     }
 }
