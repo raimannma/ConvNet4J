@@ -94,7 +94,7 @@ public enum Utils {
     }
 
     public static double max(final double[] arr) {
-        return getMaxMin(arr)[1];
+        return Objects.requireNonNull(getMaxMin(arr))[1];
     }
 
     public static double[] getMaxMin(final double[] arr) {
@@ -116,6 +116,11 @@ public enum Utils {
             }
         }
         return new double[]{maxIndex, max, minIndex, min};
+    }
+
+    public static double tanh(final double val) {
+        final double y = Math.exp(2 * val);
+        return (y - 1) / (y + 1);
     }
 }
 
