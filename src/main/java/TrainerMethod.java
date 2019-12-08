@@ -1,3 +1,3 @@
 public enum TrainerMethod {
-    ADAM, ADADELTA, SGD
+    ADAM, ADADELTA, ADAGRAD, NESTEROV, WINDOWGRAD, SGD
 }
