@@ -19,6 +19,9 @@ class LayerConfig {
     private double l2DecayMul;
     private int numNeurons;
     private int depth;
+    private int k;
+    private int n;
+    private double alpha, beta;
 
     static double getOrDefault(final double defaultValue, final double... values) {
         for (final double value : values) {
@@ -180,5 +183,21 @@ class LayerConfig {
 
     void setGroupSize(final int groupSize) {
         this.groupSize = groupSize;
+    }
+
+    int getK() {
+        return this.k;
+    }
+
+    int getN() {
+        return this.n;
+    }
+
+    double getAlpha() {
+        return this.alpha;
+    }
+
+    double getBeta() {
+        return this.beta;
     }
 }
