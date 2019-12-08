@@ -6,6 +6,7 @@ class LayerConfig {
     int inDepth;
     double dropProb;
     double biasPref;
+    int groupSize;
     private int filters;
     private int sx;
     private int sy;
@@ -171,5 +172,13 @@ class LayerConfig {
 
     int getDepth() {
         return this.depth;
+    }
+
+    int getGroupSize() {
+        return this.groupSize;
+    }
+
+    void setGroupSize(final int groupSize) {
+        this.groupSize = groupSize;
     }
 }

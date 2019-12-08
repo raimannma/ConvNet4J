@@ -67,7 +67,7 @@ class Network {
                 } else if (def.activation == Activation.ActivationType.MAXOUT) {
                     final LayerConfig config = new LayerConfig();
                     config.setType(Layer.LayerType.MAXOUT);
-                    config.setGroupSize(Double.isNaN(def.group_size) ? 2 : def.group_size);
+                    config.setGroupSize(Double.isNaN(def.groupSize) ? 2 : def.groupSize);
                     layerConfigs.add(config);
                 } else {
                     throw new RuntimeException("ERROR unsupported activation " + def.activation.toString());
