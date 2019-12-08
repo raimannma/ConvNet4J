@@ -9,7 +9,7 @@ import utils.Window;
 
 import java.util.*;
 
-public class DeepQLearn {
+public class DQN {
     private final int temporalWindow;
     private final int experienceSize;
     private final int startLearnThreshold;
@@ -35,7 +35,7 @@ public class DeepQLearn {
     private double epsilon;
     private int forwardPasses;
 
-    DeepQLearn(final int numStates, final int numActions, final Map<Option, Double> options) {
+    DQN(final int numStates, final int numActions, final Map<Option, Double> options) {
         this.temporalWindow = (int) (double) options.getOrDefault(Option.TEMPORAL_WINDOW, 1.0);
         this.experienceSize = (int) (double) options.getOrDefault(Option.EXPERIENCE_SIZE, 30000.0);
         this.startLearnThreshold = (int) (double) options.getOrDefault(Option.START_LEARN_THRESHOLD, Math.floor(Math.min(this.experienceSize * 0.1, 1000)));
