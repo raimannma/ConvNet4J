@@ -107,7 +107,7 @@ public class Vol implements Cloneable {
         return this.w[this.getIndex(x, y, depth)];
     }
 
-    private Vol cloneAndZero() {
+    Vol cloneAndZero() {
         return new Vol(this.sx, this.sy, this.depth, 0);
     }
 
