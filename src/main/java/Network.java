@@ -1,15 +1,12 @@
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import layers.ConvolutionalLayer;
-import layers.Layer;
-import layers.LayerConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static layers.Layer.LayerType;
-import static layers.Layer.LayerType.*;
+import static Layer.LayerType;
+import static Layer.LayerType.*;
 
 class Network {
     private List<Layer> layers;

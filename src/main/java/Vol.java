@@ -4,11 +4,11 @@ import com.google.gson.JsonObject;
 import java.util.Arrays;
 
 public class Vol implements Cloneable {
-    private final double[] w;
-    private final double[] dw;
-    private final int sy;
-    private final int depth;
-    private final int sx;
+    final int sx;
+    final int sy;
+    final double[] w;
+    final int depth;
+    double[] dw;
 
     public Vol(final double[] sx) {
         this.sx = 1;

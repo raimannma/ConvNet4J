@@ -1,18 +1,15 @@
-import java.util.ArrayList;
-import java.util.List;
-
-public class ParamsAndGrads {
-    final List<Double> grads;
-    private final List<Double> l1DecayList;
-    private final List<Double> l2DecayList;
+class ParamsAndGrads {
+    private final double[] l1DecayList;
+    private final double[] l2DecayList;
+    double[] grads;
     double l2DecayMul, l1DecayMul;
-    List<Double> params;
+    double[] params;
 
-    public ParamsAndGrads() {
-        this.params = new ArrayList<>();
-        this.grads = new ArrayList<>();
-        this.l1DecayList = new ArrayList<>();
-        this.l2DecayList = new ArrayList<>();
+    ParamsAndGrads() {
+        this.params = null;
+        this.grads = null;
+        this.l1DecayList = null;
+        this.l2DecayList = null;
         this.l1DecayMul = Double.NaN;
         this.l2DecayMul = Double.NaN;
     }
