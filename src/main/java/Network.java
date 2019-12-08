@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static Layer.LayerType;
-import static Layer.LayerType.*;
-
 class Network {
     private List<Layer> layers;
 
@@ -23,27 +20,27 @@ class Network {
         if (defs.length < 2) {
             throw new RuntimeException("Error! At least one input layer and one loss layer are required.");
         }
-        if (defs[0].type != LayerType.INPUT) {
+        if (defs[0].type != Layer.LayerType.INPUT) {
             throw new RuntimeException("Error! First layer must be the input layer, to declare size of inputs");
         }
 
         final List<LayerConfig> layerConfigs = new ArrayList<>();
         for (final LayerConfig def : defs) {
-            if (def.type == LayerType.SOFTMAX || def.type == LayerType.SVM) {
+            if (def.type == Layer.LayerType.SOFTMAX || def.type == Layer.LayerType.SVM) {
                 final LayerConfig config = new LayerConfig();
-                config.setType(LayerType.FC);
+                config.setType(Layer.LayerType.FC);
                 config.setNumNeurons(def.numClasses);
                 layerConfigs.add(config);
             }
 
-            if (def.type == LayerType.REGRESSION) {
+            if (def.type == Layer.LayerType.REGRESSION) {
                 final LayerConfig config = new LayerConfig();
-                config.setType(LayerType.FC);
+                config.setType(Layer.LayerType.FC);
                 config.setNumNeurons(def.numNeurons);
                 layerConfigs.add(config);
             }
 
-            if ((def.type == FC || def.type == CONVOLUTIONAL) && Double.isNaN(def.bias_pref)) {
+            if ((def.type == Layer.LayerType.FC || def.type == Layer.LayerType.CONVOLUTIONAL) && Double.isNaN(def.bias_pref)) {
                 def.bias_pref = 0.0;
                 if (def.activation != null && def.activation == ActivationType.RELU) {
                     def.bias_pref = 0.1; // relus like a bit of positive bias to get gradients early
@@ -57,28 +54,28 @@ class Network {
             if (def.activation != null) {
                 if (def.activation == ActivationType.RELU) {
                     final LayerConfig config = new LayerConfig();
-                    config.setType(RELU);
+                    config.setType(Layer.LayerType.RELU);
                     layerConfigs.add(config);
                 } else if (def.activation == ActivationType.SIGMOID) {
                     final LayerConfig config = new LayerConfig();
-                    config.setType(LayerType.SIGMOID);
+                    config.setType(Layer.LayerType.SIGMOID);
                     layerConfigs.add(config);
                 } else if (def.activation == ActivationType.TANH) {
                     final LayerConfig config = new LayerConfig();
-                    config.setType(LayerType.TANH);
+                    config.setType(Layer.LayerType.TANH);
                     layerConfigs.add(config);
                 } else if (def.activation == ActivationType.MAXOUT) {
                     final LayerConfig config = new LayerConfig();
-                    config.setType(MAXOUT);
+                    config.setType(Layer.LayerType.MAXOUT);
                     config.setGroupSize(Double.isNaN(def.group_size) ? 2 : def.group_size);
                     layerConfigs.add(config);
                 } else {
                     throw new RuntimeException("ERROR unsupported activation " + def.activation.toString());
                 }
             }
-            if (!Double.isNaN(def.drop_prob) && def.type != DROPOUT) {
+            if (!Double.isNaN(def.drop_prob) && def.type != Layer.LayerType.DROPOUT) {
                 final LayerConfig config = new LayerConfig();
-                config.setType(DROPOUT);
+                config.setType(Layer.LayerType.DROPOUT);
                 config.setDropProb(def.drop_prob);
                 layerConfigs.add(config);
             }
@@ -97,7 +94,7 @@ class Network {
 
             switch (def.type) {
                 case FC:
-                    this.layers.add(new FullyConnLayer(def));
+                    this.layers.add(new FullyConnectedLayer(def));
                     break;
                 case LRN:
                     this.layers.add(new LocalResponseNormalizationLayer(def));
@@ -146,7 +143,7 @@ class Network {
         final JsonArray jsonLayers = json.get("layers").getAsJsonArray();
         for (int i = 0; i < jsonLayers.size(); i++) {
             final JsonObject jsonLayer = jsonLayers.get(i).getAsJsonObject();
-            final LayerType type = LayerType.valueOf(jsonLayer.get("type").getAsString());
+            final Layer.LayerType type = Layer.LayerType.valueOf(jsonLayer.get("type").getAsString());
             final Layer layer;
             switch (type) {
                 case FC:
@@ -220,7 +217,7 @@ class Network {
     public double backward(final Vol output) {
         final double loss = this.layers.get(this.layers.size() - 1).backward(output);
         for (int i = this.layers.size() - 2; i >= 0; i--) {
-            this.layers.get(i).backward();
+            this.layers.get(i).backward(null);
         }
         return loss;
     }
@@ -244,19 +241,19 @@ class Network {
 
     int getPrediction() {
         final Layer lastLayer = this.layers.get(this.layers.size() - 1);
-        if (lastLayer.type != LayerType.SOFTMAX) {
+        if (lastLayer.type != Layer.LayerType.SOFTMAX) {
             throw new RuntimeException("ERROR: getPrediction function assumes softmax as last layer of the net!");
         }
 
-        final double[] p = lastLayer.out_act.w;
-        double maxv = p[0];
-        int maxi = 0;
-        for (int i = 1; i < p.length; i++) {
-            if (p[i] > maxv) {
-                maxv = p[i];
-                maxi = i;
+        final double[] probabilities = lastLayer.out_act.w;
+        double maxValue = probabilities[0];
+        int maxIndex = 0;
+        for (int i = 1; i < probabilities.length; i++) {
+            if (probabilities[i] > maxValue) {
+                maxValue = probabilities[i];
+                maxIndex = i;
             }
         }
-        return maxi;
+        return maxIndex;
     }
 }

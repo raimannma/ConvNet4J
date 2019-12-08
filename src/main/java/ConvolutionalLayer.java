@@ -121,7 +121,53 @@ class ConvolutionalLayer extends Layer {
         return out.toArray(ParamsAndGrads[]::new);
     }
 
-    void backward() {
+    @Override
+    JsonObject toJSON() {
+        final JsonObject json = new JsonObject();
+        json.addProperty("sx", this.sx);
+        json.addProperty("sy", this.sy);
+        json.addProperty("stride", this.stride);
+        json.addProperty("in_depth", this.in_depth);
+        json.addProperty("out_depth", this.out_depth);
+        json.addProperty("out_sx", this.out_sx);
+        json.addProperty("out_sy", this.out_sy);
+        json.addProperty("type", this.type.toString());
+        json.addProperty("l1_decay_mul", this.l1_decay_mul);
+        json.addProperty("l2_decay_mul", this.l2_decay_mul);
+        json.addProperty("pad", this.pad);
+
+        final JsonArray jsonFilters = new JsonArray();
+        for (final Vol filter : this.filters) {
+            jsonFilters.add(filter.toJSON());
+        }
+        json.add("filters", jsonFilters);
+        json.add("biases", this.biases.toJSON());
+        return json;
+    }
+
+    @Override
+    void fromJSON(final JsonObject json) {
+        this.out_depth = json.get("out_depth").getAsInt();
+        this.out_sx = json.get("out_sx").getAsInt();
+        this.out_sy = json.get("out_sy").getAsInt();
+        this.type = LayerType.valueOf(json.get("type").getAsString());
+        this.sx = json.get("sx").getAsInt(); // filter size in x, y dims
+        this.sy = json.get("sy").getAsInt();
+        this.stride = json.get("stride").getAsInt();
+        this.in_depth = json.get("in_depth").getAsInt(); // depth of input volume
+        this.filters = new ArrayList<>();
+        this.l1_decay_mul = Double.isNaN(json.get("l1_decay_mul").getAsDouble()) ? 1 : json.get("l1_decay_mul").getAsDouble();
+        this.l2_decay_mul = Double.isNaN(json.get("l2_decay_mul").getAsDouble()) ? 1 : json.get("l2_decay_mul").getAsDouble();
+        this.pad = Double.isNaN(json.get("pad").getAsDouble()) ? 0 : json.get("pad").getAsInt();
+        final JsonArray jsonFilters = json.get("filters").getAsJsonArray();
+        for (var i = 0; i < jsonFilters.size(); i++) {
+            this.filters.add(Vol.fromJSON(jsonFilters.get(i).getAsJsonObject()));
+        }
+        this.biases = Vol.fromJSON(json.get("biases").getAsJsonObject());
+    }
+
+    @Override
+    public double backward(final Vol output) {
         final var V = this.in_act;
         V.dw = Utils.zerosDouble(V.w.length); // zero out gradient wrt bottom data, we're about to fill it
 
@@ -156,48 +202,6 @@ class ConvolutionalLayer extends Layer {
                 }
             }
         }
-    }
-
-    JsonObject toJSON() {
-        final JsonObject json = new JsonObject();
-        json.addProperty("sx", this.sx);
-        json.addProperty("sy", this.sy);
-        json.addProperty("stride", this.stride);
-        json.addProperty("in_depth", this.in_depth);
-        json.addProperty("out_depth", this.out_depth);
-        json.addProperty("out_sx", this.out_sx);
-        json.addProperty("out_sy", this.out_sy);
-        json.addProperty("type", this.type.toString());
-        json.addProperty("l1_decay_mul", this.l1_decay_mul);
-        json.addProperty("l2_decay_mul", this.l2_decay_mul);
-        json.addProperty("pad", this.pad);
-
-        final JsonArray jsonFilters = new JsonArray();
-        for (final Vol filter : this.filters) {
-            jsonFilters.add(filter.toJSON());
-        }
-        json.add("filters", jsonFilters);
-        json.add("biases", this.biases.toJSON());
-        return json;
-    }
-
-    void fromJSON(final JsonObject json) {
-        this.out_depth = json.get("out_depth").getAsInt();
-        this.out_sx = json.get("out_sx").getAsInt();
-        this.out_sy = json.get("out_sy").getAsInt();
-        this.type = LayerType.valueOf(json.get("type").getAsString());
-        this.sx = json.get("sx").getAsInt(); // filter size in x, y dims
-        this.sy = json.get("sy").getAsInt();
-        this.stride = json.get("stride").getAsInt();
-        this.in_depth = json.get("in_depth").getAsInt(); // depth of input volume
-        this.filters = new ArrayList<>();
-        this.l1_decay_mul = Double.isNaN(json.get("l1_decay_mul").getAsDouble()) ? 1 : json.get("l1_decay_mul").getAsDouble();
-        this.l2_decay_mul = Double.isNaN(json.get("l2_decay_mul").getAsDouble()) ? 1 : json.get("l2_decay_mul").getAsDouble();
-        this.pad = Double.isNaN(json.get("pad").getAsDouble()) ? 0 : json.get("pad").getAsInt();
-        final JsonArray jsonFilters = json.get("filters").getAsJsonArray();
-        for (var i = 0; i < jsonFilters.size(); i++) {
-            this.filters.add(Vol.fromJSON(jsonFilters.get(i).getAsJsonObject()));
-        }
-        this.biases = Vol.fromJSON(json.get("biases").getAsJsonObject());
+        return 0;
     }
 }
