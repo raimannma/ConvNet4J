@@ -16,6 +16,7 @@ public class MaxoutLayer extends Layer {
     public MaxoutLayer(final LayerConfig opt) {
         // required
         this.groupSize = LayerConfig.getOrDefault(2, opt.getGroupSize());
+        this.groupSize = this.groupSize > 0 ? this.groupSize : 2;
 
         //computed
         this.outSX = opt.getInSX();

@@ -24,7 +24,6 @@ public class FullyConnectedLayer extends Layer {
         // required
         this.outDepth = LayerConfig.getOrDefault(opt.getNumNeurons(), opt.getFilters());
 
-
         // optional
         this.l1DecayMul = LayerConfig.getOrDefault(0, opt.getL1DecayMul());
         this.l2DecayMul = LayerConfig.getOrDefault(1, opt.getL2DecayMul());

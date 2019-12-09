@@ -2,32 +2,61 @@ package layers;
 
 import enums.ActivationType;
 
+import static java.lang.Double.NaN;
+
 public class LayerConfig {
-    public int numClasses;
-    public ActivationType activation;
-    public Layer.LayerType type;
     public int inSX;
     public int inSY;
     public int inDepth;
+    public int numClasses;
+    public ActivationType activation;
+    public Layer.LayerType type;
     public double dropProb;
     public double biasPref;
     public int groupSize;
     public int numNeurons;
-    private int filters;
     private int sx;
     private int sy;
+    private int depth;
     private int outSX;
     private int outSY;
     private int outDepth;
+    private int filters;
     private int stride;
     private int pad;
     private double l1DecayMul;
     private double l2DecayMul;
-    private int depth;
     private int k;
     private int n;
     private double alpha;
     private double beta;
+
+    public LayerConfig() {
+        this.numClasses = 0;
+        this.activation = null;
+        this.type = null;
+        this.inSX = 0;
+        this.inSY = 0;
+        this.inDepth = 0;
+        this.dropProb = NaN;
+        this.biasPref = NaN;
+        this.groupSize = 0;
+        this.numNeurons = 0;
+        this.filters = 0;
+        this.sx = 0;
+        this.sy = 0;
+        this.outSX = 0;
+        this.outSY = 0;
+        this.outDepth = 0;
+        this.stride = 1;
+        this.pad = 0;
+        this.l1DecayMul = NaN;
+        this.l2DecayMul = NaN;
+        this.depth = 0;
+        this.n = 0;
+        this.alpha = NaN;
+        this.beta = NaN;
+    }
 
     static double getOrDefault(final double defaultValue, final double... values) {
         for (final double value : values) {

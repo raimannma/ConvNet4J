@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 class Network {
-    private List<Layer> layers;
+    List<Layer> layers;
 
     private Network() {
         this.layers = new ArrayList<>();
@@ -37,16 +37,12 @@ class Network {
                 config.setType(Layer.LayerType.FC);
                 config.setNumNeurons(def.numClasses);
                 layerConfigs.add(config);
-            }
-
-            if (def.type == Layer.LayerType.REGRESSION) {
+            } else if (def.type == Layer.LayerType.REGRESSION) {
                 final LayerConfig config = new LayerConfig();
                 config.setType(Layer.LayerType.FC);
                 config.setNumNeurons(def.numNeurons);
                 layerConfigs.add(config);
-            }
-
-            if ((def.type == Layer.LayerType.FC || def.type == Layer.LayerType.CONVOLUTIONAL) && Double.isNaN(def.biasPref)) {
+            } else if ((def.type == Layer.LayerType.FC || def.type == Layer.LayerType.CONVOLUTIONAL) && Double.isNaN(def.biasPref)) {
                 def.biasPref = 0.0;
                 if (def.activation == ActivationType.RELU) {
                     def.biasPref = 0.1; // relus like a bit of positive bias to get gradients early
@@ -79,7 +75,7 @@ class Network {
                     throw new RuntimeException("ERROR unsupported activation " + def.activation.toString());
                 }
             }
-            if (!Double.isNaN(def.dropProb) && def.type != Layer.LayerType.DROPOUT) {
+            if (!Double.isNaN(def.dropProb) && def.dropProb != 0 && def.type != Layer.LayerType.DROPOUT) {
                 final LayerConfig config = new LayerConfig();
                 config.setType(Layer.LayerType.DROPOUT);
                 config.setDropProb(def.dropProb);
