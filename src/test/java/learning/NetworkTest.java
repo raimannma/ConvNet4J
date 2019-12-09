@@ -75,6 +75,23 @@ class NetworkTest {
             sum += probabilityVolume.w[i];
         }
         assertTrue(Math.abs(sum - 1) < 0.001);
-        System.out.println(Math.abs(sum - 1));
     }
+
+    @Test
+    public void testLearning() {
+        initNet();
+
+        for (int i = 0; i < 100; i++) {
+            final Vol x = new Vol(new double[]{Math.random() * 2 - 1, Math.random() * 2 - 1});
+            final Vol pv = network.forward(x);
+            final int gti = (int) Math.floor(Math.random() * 3);
+            final Vol output = new Vol(1, 1, 1, 0);
+            output.set(0, 0, 0, gti);
+            trainer.train(x, output);
+            final Vol pv2 = network.forward(x);
+            assertTrue(pv2.w[gti] >= pv.w[gti]);
+        }
+    }
+
+
 }
