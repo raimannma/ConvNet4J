@@ -90,8 +90,8 @@ class Trainer {
                         // adam update
                         gsumi.set(j, gsumi.get(j) * this.beta1 + (1 - this.beta1) * gij); // update biased first moment estimate
                         xsumi.set(j, xsumi.get(j) * this.beta2 + (1 - this.beta2) * gij * gij); // update biased second moment estimate
-                        final double biasCorr1 = gsumi.get(j) * (1 - Math.pow(this.beta1, this.k)); // correct bias first moment estimate
-                        final double biasCorr2 = xsumi.get(j) * (1 - Math.pow(this.beta2, this.k)); // correct bias second moment estimate
+                        final var biasCorr1 = gsumi.get(j) / (1 - Math.pow(this.beta1, this.k)); // correct bias first moment estimate
+                        final var biasCorr2 = xsumi.get(j) / (1 - Math.pow(this.beta2, this.k)); // correct bias second moment estimate
                         final double dx = -this.learningRate * biasCorr1 / (Math.sqrt(biasCorr2) + this.epsilon);
                         p[j] += dx;
                     } else if (this.method == TrainerMethod.ADAGRAD) {
