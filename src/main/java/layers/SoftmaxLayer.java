@@ -32,12 +32,12 @@ public class SoftmaxLayer extends Layer {
 
         final double[] es = new double[this.outDepth];
         double eSum = 0;
-        for (int i = 0; i < es.length; i++) {
+        for (int i = 0; i < this.outDepth; i++) {
             final double e = Math.exp(vol.w[i] - maxActivation);
             eSum += e;
             es[i] = e;
         }
-        for (int i = 0; i < es.length; i++) {
+        for (int i = 0; i < this.outDepth; i++) {
             es[i] /= eSum;
             outActivation.w[i] = es[i];
         }

@@ -32,35 +32,35 @@ public class LayerConfig {
     private double beta;
 
     public LayerConfig() {
-        this.numClasses = 0;
+        this.numClasses = -1;
         this.activation = null;
         this.type = null;
-        this.inSX = 0;
-        this.inSY = 0;
-        this.inDepth = 0;
+        this.inSX = -1;
+        this.inSY = -1;
+        this.inDepth = -1;
         this.dropProb = NaN;
         this.biasPref = NaN;
-        this.groupSize = 0;
-        this.numNeurons = 0;
-        this.filters = 0;
-        this.sx = 0;
-        this.sy = 0;
-        this.outSX = 0;
-        this.outSY = 0;
-        this.outDepth = 0;
-        this.stride = 1;
-        this.pad = 0;
+        this.groupSize = -1;
+        this.numNeurons = -1;
+        this.filters = -1;
+        this.sx = -1;
+        this.sy = -1;
+        this.outSX = -1;
+        this.outSY = -1;
+        this.outDepth = -1;
+        this.stride = -1;
+        this.pad = -1;
         this.l1DecayMul = NaN;
         this.l2DecayMul = NaN;
-        this.depth = 0;
-        this.n = 0;
+        this.depth = -1;
+        this.n = -1;
         this.alpha = NaN;
         this.beta = NaN;
     }
 
     static double getOrDefault(final double defaultValue, final double... values) {
         for (final double value : values) {
-            if (!Double.isNaN(value)) {
+            if (!Double.isNaN(value) && value != -1) {
                 return value;
             }
         }
@@ -69,7 +69,7 @@ public class LayerConfig {
 
     static int getOrDefault(final int defaultValue, final int... values) {
         for (final int value : values) {
-            if (!Double.isNaN(value)) {
+            if (!Double.isNaN(value) && value != -1) {
                 return value;
             }
         }

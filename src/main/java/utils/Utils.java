@@ -2,7 +2,6 @@ package utils;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 public enum Utils {
@@ -40,12 +39,12 @@ public enum Utils {
     }
 
     public static double max(final double[] arr) {
-        return Objects.requireNonNull(getMaxMin(arr))[1];
+        return Double.MIN_VALUE;
     }
 
     public static double[] getMaxMin(final double[] arr) {
         if (arr.length == 0) {
-            return null;
+            return new double[]{-1, Double.MIN_VALUE, -1, Double.MAX_VALUE};
         }
         double max = arr[0];
         double min = arr[0];

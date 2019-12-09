@@ -4,11 +4,13 @@ import enums.ActivationType;
 import layers.Layer;
 import layers.LayerConfig;
 import org.junit.jupiter.api.Test;
+import utils.Vol;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NetworkTest {
     private static Network network;
@@ -17,7 +19,6 @@ class NetworkTest {
     @Test
     public void testInitialization() {
         NetworkTest.initNet();
-        System.out.println(network.layers.toString());
         assertEquals(7, network.layers.size());
     }
 
@@ -35,17 +36,19 @@ class NetworkTest {
         hidden.setType(Layer.LayerType.FC);
         hidden.setNumNeurons(5);
         hidden.setActivation(ActivationType.TANH);
-        //add it 2x
         configs.add(hidden);
-        configs.add(hidden);
+
+        final LayerConfig hidden2 = new LayerConfig();
+        hidden2.setType(Layer.LayerType.FC);
+        hidden2.setNumNeurons(5);
+        hidden2.setActivation(ActivationType.TANH);
+        configs.add(hidden2);
 
 
         final LayerConfig output = new LayerConfig();
         output.setType(Layer.LayerType.SOFTMAX);
         output.setNumClasses(3);
         configs.add(output);
-
-        configs.forEach(layerConfig -> System.out.println(layerConfig.type));
 
         network = new Network(configs.toArray(LayerConfig[]::new));
 
@@ -55,5 +58,23 @@ class NetworkTest {
         options.setBatchSize(1);
         options.setL2Decay(0);
         trainer = new Trainer(network, options);
+    }
+
+    @Test
+    public void testForwardPropagation() {
+        initNet();
+
+        final Vol x = new Vol(new double[]{0.2, -0.3});
+        final Vol probabilityVolume = network.forward(x);
+        assertEquals(3, probabilityVolume.w.length);
+
+        double sum = 0;
+        for (int i = 0; i < probabilityVolume.w.length; i++) {
+            assertTrue(probabilityVolume.w[i] > 0);
+            assertTrue(probabilityVolume.w[i] < 1);
+            sum += probabilityVolume.w[i];
+        }
+        assertTrue(Math.abs(sum - 1) < 0.001);
+        System.out.println(Math.abs(sum - 1));
     }
 }
