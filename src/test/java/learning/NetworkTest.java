@@ -84,14 +84,37 @@ class NetworkTest {
         for (int i = 0; i < 100; i++) {
             final Vol x = new Vol(new double[]{Math.random() * 2 - 1, Math.random() * 2 - 1});
             final Vol pv = network.forward(x);
-            final int gti = (int) Math.floor(Math.random() * 3);
-            final Vol output = new Vol(1, 1, 1, 0);
-            output.set(0, 0, 0, gti);
+            final int groundTruthIndex = (int) Math.floor(Math.random() * 3);
+            final Vol output = new Vol(1, 1, 1, groundTruthIndex);
             trainer.train(x, output);
             final Vol pv2 = network.forward(x);
-            assertTrue(pv2.w[gti] >= pv.w[gti]);
+            assertTrue(pv2.w[groundTruthIndex] >= pv.w[groundTruthIndex]);
         }
     }
 
+    @Test
+    public void testGradiantComputing() {
+        initNet();
 
+        final Vol x = new Vol(new double[]{Math.random() * 2 - 1, Math.random() * 2 - 1});
+        final Vol output = new Vol(1, 1, 1, Math.floor(Math.random() * 3));
+        trainer.train(x, output); // computes gradients at all layers, and at x
+
+        final double delta = 0.000001;
+
+        for (int i = 0; i < x.w.length; i++) {
+            final double temp = x.w[i];
+
+            x.w[i] += delta;
+            final double c0 = Math.abs(network.getCostLoss(x, output));
+            x.w[i] -= 2 * delta;
+            final double c1 = Math.abs(network.getCostLoss(x, output));
+            x.w[i] = temp; // reset
+
+            final double gradNumeric = (c0 - c1) / (2 * delta);
+            final double relError = (x.dw[i] - gradNumeric) / (x.dw[i] + gradNumeric);
+
+            assertTrue(Math.abs(relError) < 0.1);
+        }
+    }
 }

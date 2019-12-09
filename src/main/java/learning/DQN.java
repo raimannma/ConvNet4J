@@ -174,21 +174,21 @@ public class DQN {
         // learn based on experience, once we have some samples to go on
         // this is where the magic happens...
         if (this.experience.size() > this.startLearnThreshold) {
-            var avgCost = 0.0;
-            for (var k = 0; k < this.batchSize; k++) {
-                final var randInt = Utils.randInt(0, this.experience.size());
-                final var exp = this.experience.get(randInt);
+            double avgCost = 0.0;
+            for (int k = 0; k < this.batchSize; k++) {
+                final int randInt = Utils.randInt(0, this.experience.size());
+                final Experience exp = this.experience.get(randInt);
 
-                final var x = new Vol(1, 1, this.netInputs);
+                final Vol x = new Vol(1, 1, this.netInputs);
                 x.w = Arrays.stream(exp.lastState).mapToDouble(i -> i).toArray();
 
-                final var r = exp.lastReward + this.gamma * this.policy(exp.state)[1];
+                final double r = exp.lastReward + this.gamma * this.policy(exp.state)[1];
 
                 final Vol yStruct = new Vol(1, 1, 2, 0);
                 yStruct.set(0, 0, 0, exp.lastAction);
                 yStruct.set(0, 0, 1, r);
 
-                final var loss = this.tdTrainer.train(x, yStruct);
+                final Map<String, Double> loss = this.tdTrainer.train(x, yStruct);
                 avgCost += loss.get("loss");
             }
             avgCost = avgCost / this.batchSize;
