@@ -9,7 +9,7 @@ import utils.Window;
 
 import java.util.*;
 
-public class DQN {
+class DQN {
     private final int temporalWindow;
     private final int experienceSize;
     private final int startLearnThreshold;
@@ -45,7 +45,7 @@ public class DQN {
         this.epsilonMin = options.getOrDefault(Option.EPSILON_MIN, 0.05);
         this.epsilonTestTime = options.getOrDefault(Option.EPSILON_TEST_TIME, 1.0);
 
-        final int hiddenLayers = (int) (double) options.getOrDefault(Option.HIDDEN_LAYERS, 4.0);
+        final int hiddenLayers = (int) (double) options.getOrDefault(Option.HIDDEN_LAYERS, 10.0);
 
         this.netInputs = numStates * this.temporalWindow + numActions * this.temporalWindow + numStates;
         this.numStates = numStates;
@@ -153,6 +153,7 @@ public class DQN {
     }
 
     double backward(final double reward) {
+        this.rewardWindow.add(reward);
         if (!this.learning) {
             return reward;
         }
@@ -197,7 +198,7 @@ public class DQN {
         return Double.NaN;
     }
 
-    private enum Option {
+    protected enum Option {
         EXPERIENCE_SIZE, START_LEARN_THRESHOLD, GAMMA, LEARNING_STEPS_TOTAL, LEARNING_STEPS_BURNIN, EPSILON_MIN, EPSILON_TEST_TIME, HIDDEN_LAYERS, TEMPORAL_WINDOW
     }
 
