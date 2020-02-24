@@ -26,26 +26,26 @@ class Network {
         if (defs.length < 2) {
             throw new RuntimeException("Error! At least one input layer and one loss layer are required.");
         }
-        if (defs[0].type != Layer.LayerType.INPUT) {
+        if (defs[0].getType() != Layer.LayerType.INPUT) {
             throw new RuntimeException("Error! First layer must be the input layer, to declare size of inputs");
         }
 
         final List<LayerConfig> layerConfigs = new ArrayList<>();
         for (final LayerConfig def : defs) {
-            if (def.type == Layer.LayerType.SOFTMAX || def.type == Layer.LayerType.SVM) {
+            if (def.getType() == Layer.LayerType.SOFTMAX || def.getType() == Layer.LayerType.SVM) {
                 final LayerConfig config = new LayerConfig();
                 config.setType(Layer.LayerType.FC);
-                config.setNumNeurons(def.numClasses);
+                config.setNumNeurons(def.getNumClasses());
                 layerConfigs.add(config);
-            } else if (def.type == Layer.LayerType.REGRESSION) {
+            } else if (def.getType() == Layer.LayerType.REGRESSION) {
                 final LayerConfig config = new LayerConfig();
                 config.setType(Layer.LayerType.FC);
-                config.setNumNeurons(def.numNeurons);
+                config.setNumNeurons(def.getNumNeurons());
                 layerConfigs.add(config);
-            } else if ((def.type == Layer.LayerType.FC || def.type == Layer.LayerType.CONVOLUTIONAL) && Double.isNaN(def.biasPref)) {
-                def.biasPref = 0.0;
-                if (def.activation == ActivationType.RELU) {
-                    def.biasPref = 0.1; // relus like a bit of positive bias to get gradients early
+            } else if ((def.getType() == Layer.LayerType.FC || def.getType() == Layer.LayerType.CONVOLUTIONAL) && Double.isNaN(def.getBiasPref())) {
+                def.setBiasPref(0.0);
+                if (def.getActivation() == ActivationType.RELU) {
+                    def.setBiasPref(0.1); // relus like a bit of positive bias to get gradients early
                     // otherwise it's technically possible that a relu unit will never turn on (by chance)
                     // and will never get any gradient and never contribute any computation. Dead relu.
                 }
@@ -53,32 +53,32 @@ class Network {
 
             layerConfigs.add(def);
 
-            if (def.activation != null) {
-                if (def.activation == ActivationType.RELU) {
+            if (def.getActivation() != null) {
+                if (def.getActivation() == ActivationType.RELU) {
                     final LayerConfig config = new LayerConfig();
                     config.setType(Layer.LayerType.RELU);
                     layerConfigs.add(config);
-                } else if (def.activation == ActivationType.SIGMOID) {
+                } else if (def.getActivation() == ActivationType.SIGMOID) {
                     final LayerConfig config = new LayerConfig();
                     config.setType(Layer.LayerType.SIGMOID);
                     layerConfigs.add(config);
-                } else if (def.activation == ActivationType.TANH) {
+                } else if (def.getActivation() == ActivationType.TANH) {
                     final LayerConfig config = new LayerConfig();
                     config.setType(Layer.LayerType.TANH);
                     layerConfigs.add(config);
-                } else if (def.activation == ActivationType.MAXOUT) {
+                } else if (def.getActivation() == ActivationType.MAXOUT) {
                     final LayerConfig config = new LayerConfig();
                     config.setType(Layer.LayerType.MAXOUT);
-                    config.setGroupSize(Double.isNaN(def.groupSize) ? 2 : def.groupSize);
+                    config.setGroupSize(Double.isNaN(def.getGroupSize()) ? 2 : def.getGroupSize());
                     layerConfigs.add(config);
                 } else {
-                    throw new RuntimeException("ERROR unsupported activation " + def.activation.toString());
+                    throw new RuntimeException("ERROR unsupported activation " + def.getActivation().toString());
                 }
             }
-            if (!Double.isNaN(def.dropProb) && def.dropProb != 0 && def.type != Layer.LayerType.DROPOUT) {
+            if (!Double.isNaN(def.getDropProb()) && def.getDropProb() != 0 && def.getType() != Layer.LayerType.DROPOUT) {
                 final LayerConfig config = new LayerConfig();
                 config.setType(Layer.LayerType.DROPOUT);
-                config.setDropProb(def.dropProb);
+                config.setDropProb(def.getDropProb());
                 layerConfigs.add(config);
             }
         }
@@ -89,12 +89,12 @@ class Network {
             final LayerConfig def = layerConfigs.get(i);
             if (i > 0) {
                 final Layer prev = this.layers.get(i - 1);
-                def.inSX = prev.outSX;
-                def.inSY = prev.outSY;
-                def.inDepth = prev.outDepth;
+                def.setInSX(prev.outSX);
+                def.setInSY(prev.outSY);
+                def.setInDepth(prev.outDepth);
             }
 
-            switch (def.type) {
+            switch (def.getType()) {
                 case FC:
                     this.layers.add(new FullyConnectedLayer(def));
                     break;
@@ -135,7 +135,7 @@ class Network {
                     this.layers.add(new SVMLayer(def));
                     break;
                 default:
-                    throw new RuntimeException("ERROR: UNRECOGNIZED LAYER TYPE: " + def.type);
+                    throw new RuntimeException("ERROR: UNRECOGNIZED LAYER TYPE: " + def.getType());
             }
         }
     }

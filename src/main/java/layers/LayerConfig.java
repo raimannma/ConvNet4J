@@ -2,19 +2,21 @@ package layers;
 
 import enums.ActivationType;
 
+import java.util.Arrays;
+
 import static java.lang.Double.NaN;
 
 public class LayerConfig {
-    public int inSX;
-    public int inSY;
-    public int inDepth;
-    public int numClasses;
-    public ActivationType activation;
-    public Layer.LayerType type;
-    public double dropProb;
-    public double biasPref;
-    public int groupSize;
-    public int numNeurons;
+    private double biasPref;
+    private double dropProb;
+    private Layer.LayerType type;
+    private int groupSize;
+    private int numNeurons;
+    private ActivationType activation;
+    private int numClasses;
+    private int inSX;
+    private int inSY;
+    private int inDepth;
     private int sx;
     private int sy;
     private int depth;
@@ -124,7 +126,7 @@ public class LayerConfig {
         this.inDepth = inDepth;
     }
 
-    double getDropProb() {
+    public double getDropProb() {
         return this.dropProb;
     }
 
@@ -132,7 +134,7 @@ public class LayerConfig {
         this.dropProb = dropProb;
     }
 
-    double getBiasPref() {
+    public double getBiasPref() {
         return this.biasPref;
     }
 
@@ -140,7 +142,7 @@ public class LayerConfig {
         this.biasPref = biasPref;
     }
 
-    int getGroupSize() {
+    public int getGroupSize() {
         return this.groupSize;
     }
 
@@ -148,7 +150,7 @@ public class LayerConfig {
         this.groupSize = groupSize;
     }
 
-    int getNumNeurons() {
+    public int getNumNeurons() {
         return this.numNeurons;
     }
 
