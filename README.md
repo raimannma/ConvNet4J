@@ -1,1 +1,1 @@
-Port of ConvNet to Java 
+Port of ConvNetJS to Java 
