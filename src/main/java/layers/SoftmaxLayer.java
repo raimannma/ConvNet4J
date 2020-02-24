@@ -5,6 +5,8 @@ import utils.ParamsAndGrads;
 import utils.Utils;
 import utils.Vol;
 
+import java.util.Arrays;
+
 public class SoftmaxLayer extends Layer {
     private int numInputs;
     private double[] es;
@@ -28,7 +30,7 @@ public class SoftmaxLayer extends Layer {
 
         final Vol outActivation = new Vol(1, 1, this.outDepth, 0);
 
-        final double maxActivation = Utils.max(vol.w);
+        final double maxActivation = Arrays.stream(vol.w).max().orElseThrow();
 
         final double[] es = new double[this.outDepth];
         double eSum = 0;
