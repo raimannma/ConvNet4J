@@ -7,7 +7,7 @@ import utils.Vol;
 
 import java.util.*;
 
-class Trainer {
+public class Trainer {
 
     private final Network net;
     private final double learningRate;
@@ -24,7 +24,7 @@ class Trainer {
     private final TrainerMethod method;
     private double k;
 
-    Trainer(final Network network, final TrainerOptions options) {
+    public Trainer(final Network network, final TrainerOptions options) {
         this.net = network;
         this.learningRate = options.getLearningRate();
         this.l1Decay = options.getL1Decay();
@@ -44,7 +44,7 @@ class Trainer {
 
     }
 
-    Map<String, Double> train(final Vol x, final Vol y) {
+    public Map<String, Double> train(final Vol x, final Vol y) {
         this.net.forward(x, true);
 
         final double costLoss = this.net.backward(y);

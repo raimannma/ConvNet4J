@@ -2,7 +2,7 @@ package learning;
 
 import enums.TrainerMethod;
 
-class TrainerOptions {
+public class TrainerOptions {
     double learningRate;
     double l2Decay;
     double batchSize;
@@ -14,7 +14,7 @@ class TrainerOptions {
     private double beta1;
     private double beta2;
 
-    double getLearningRate() {
+    public double getLearningRate() {
         return this.learningRate;
     }
 
@@ -22,7 +22,7 @@ class TrainerOptions {
         this.learningRate = learningRate;
     }
 
-    double getL1Decay() {
+    public double getL1Decay() {
         return this.l1Decay;
     }
 
@@ -30,7 +30,7 @@ class TrainerOptions {
         this.l1Decay = l1Decay;
     }
 
-    double getL2Decay() {
+    public double getL2Decay() {
         return this.l2Decay;
     }
 
@@ -38,7 +38,7 @@ class TrainerOptions {
         this.l2Decay = l2Decay;
     }
 
-    double getBatchSize() {
+    public double getBatchSize() {
         return this.batchSize;
     }
 
@@ -46,7 +46,7 @@ class TrainerOptions {
         this.batchSize = batchSize;
     }
 
-    TrainerMethod getMethod() {
+    public TrainerMethod getMethod() {
         return this.method;
     }
 
@@ -54,7 +54,7 @@ class TrainerOptions {
         this.method = method;
     }
 
-    double getMomentum() {
+    public double getMomentum() {
         return this.momentum;
     }
 
@@ -62,7 +62,7 @@ class TrainerOptions {
         this.momentum = momentum;
     }
 
-    double getRo() {
+    public double getRo() {
         return this.ro;
     }
 
@@ -70,7 +70,7 @@ class TrainerOptions {
         this.ro = ro;
     }
 
-    double getEpsilon() {
+    public double getEpsilon() {
         return this.epsilon;
     }
 
@@ -78,7 +78,7 @@ class TrainerOptions {
         this.epsilon = epsilon;
     }
 
-    double getBeta1() {
+    public double getBeta1() {
         return this.beta1;
     }
 
@@ -86,7 +86,7 @@ class TrainerOptions {
         this.beta1 = beta1;
     }
 
-    double getBeta2() {
+    public double getBeta2() {
         return this.beta2;
     }
 
