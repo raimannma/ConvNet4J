@@ -14,10 +14,7 @@ class DQN {
     private final int experienceSize;
     private final int startLearnThreshold;
     private final double gamma;
-    private final int learningStepsTotal;
-    private final int learningStepsBurnIn;
     private final double epsilonMin;
-    private final double epsilonTestTime;
     private final int netInputs;
     private final int numStates;
     private final int numActions;
@@ -31,19 +28,19 @@ class DQN {
     private final boolean learning;
     private final Network network;
     private final int batchSize;
+    private final double epsilonDecay;
     private int age;
     private double epsilon;
     private int forwardPasses;
 
     DQN(final int numStates, final int numActions, final Map<Option, Double> options) {
-        this.temporalWindow = (int) (double) options.getOrDefault(Option.TEMPORAL_WINDOW, 1.0);
+        this.temporalWindow = (int) (double) options.getOrDefault(Option.TEMPORAL_WINDOW, 10.0);
         this.experienceSize = (int) (double) options.getOrDefault(Option.EXPERIENCE_SIZE, 30000.0);
-        this.startLearnThreshold = (int) (double) options.getOrDefault(Option.START_LEARN_THRESHOLD, Math.floor(Math.min(this.experienceSize * 0.1, 1000)));
+        this.startLearnThreshold = Math.max(1, (int) (double) options.getOrDefault(Option.START_LEARN_THRESHOLD, Math.floor(Math.min(this.experienceSize * 0.1, 1000))));
         this.gamma = options.getOrDefault(Option.GAMMA, 0.8);
-        this.learningStepsTotal = (int) (double) options.getOrDefault(Option.LEARNING_STEPS_TOTAL, 100000.0);
-        this.learningStepsBurnIn = (int) (double) options.getOrDefault(Option.LEARNING_STEPS_BURNIN, 3000.0);
+        this.epsilon = options.getOrDefault(Option.EPSILON, 0.3);
         this.epsilonMin = options.getOrDefault(Option.EPSILON_MIN, 0.05);
-        this.epsilonTestTime = options.getOrDefault(Option.EPSILON_TEST_TIME, 1.0);
+        this.epsilonDecay = options.getOrDefault(Option.EPSILON_DECAY, 0.99);
 
         final int hiddenLayers = (int) (double) options.getOrDefault(Option.HIDDEN_LAYERS, 10.0);
 
@@ -67,9 +64,9 @@ class DQN {
 
         for (int i = 0; i < hiddenLayers; i++) {
             final LayerConfig hiddenLayer = new LayerConfig();
-            hiddenLayer.setType(Layer.LayerType.FC);
-            hiddenLayer.setNumNeurons(20);
-            hiddenLayer.setActivation(ActivationType.RELU);
+            hiddenLayer.setType(Layer.LayerType.RELU);
+            hiddenLayer.setNumNeurons(5);
+            hiddenLayer.setActivation(ActivationType.TANH);
             config.add(hiddenLayer);
         }
 
@@ -80,10 +77,10 @@ class DQN {
 
         this.network = new Network(config.toArray(LayerConfig[]::new));
 
-        this.batchSize = 64;
+        this.batchSize = 16;
 
         final TrainerOptions trainerOptions = new TrainerOptions();
-        trainerOptions.learningRate = 0.01;
+        trainerOptions.learningRate = 0.05;
         trainerOptions.momentum = 0;
         trainerOptions.batchSize = this.batchSize;
         trainerOptions.l2Decay = 0.01;
@@ -93,7 +90,7 @@ class DQN {
         this.experience = new ArrayList<>();
         this.age = 0;
         this.forwardPasses = 0;
-        this.epsilon = 1;
+        this.epsilon = 0.1;
         this.learning = true;
     }
 
@@ -105,9 +102,7 @@ class DQN {
         if (this.forwardPasses > this.temporalWindow) {
             netInput = this.getNetInput(Arrays.stream(input).boxed().toArray(Double[]::new));
             if (this.learning) {
-                this.epsilon = Math.min(1.0, Math.max(this.epsilonMin, 1.0 - (double) (this.age - this.learningStepsBurnIn) / (this.learningStepsTotal - this.learningStepsBurnIn)));
-            } else {
-                this.epsilon = this.epsilonTestTime;
+                this.epsilon = Math.max(this.epsilonMin, this.epsilon * Math.pow(this.epsilonDecay, this.age));
             }
             final double rand = Math.random();
             action = rand > this.epsilon
@@ -195,11 +190,11 @@ class DQN {
             avgCost = avgCost / this.batchSize;
             return avgCost;
         }
-        return Double.NaN;
+        return 1;
     }
 
     protected enum Option {
-        EXPERIENCE_SIZE, START_LEARN_THRESHOLD, GAMMA, LEARNING_STEPS_TOTAL, LEARNING_STEPS_BURNIN, EPSILON_MIN, EPSILON_TEST_TIME, HIDDEN_LAYERS, TEMPORAL_WINDOW
+        EXPERIENCE_SIZE, START_LEARN_THRESHOLD, GAMMA, EPSILON_MIN, EPSILON_DECAY, HIDDEN_LAYERS, EPSILON, TEMPORAL_WINDOW
     }
 
     private static final class Experience {
