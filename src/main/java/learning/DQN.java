@@ -102,7 +102,7 @@ class DQN {
         if (this.forwardPasses > this.temporalWindow) {
             netInput = this.getNetInput(Arrays.stream(input).boxed().toArray(Double[]::new));
             if (this.learning) {
-                this.epsilon = Math.max(this.epsilonMin, this.epsilon * Math.pow(this.epsilonDecay, this.age));
+                this.epsilon = Math.max(this.epsilonMin, this.epsilon * this.epsilonDecay);
             }
             final double rand = Math.random();
             action = rand > this.epsilon
