@@ -29,7 +29,6 @@ class DQN {
     private final Network network;
     private final int batchSize;
     private final double epsilonDecay;
-    private int age;
     private double epsilon;
     private int forwardPasses;
 
@@ -88,7 +87,6 @@ class DQN {
         this.tdTrainer = new Trainer(this.network, trainerOptions);
 
         this.experience = new ArrayList<>();
-        this.age = 0;
         this.forwardPasses = 0;
         this.epsilon = 0.1;
         this.learning = true;
@@ -152,7 +150,6 @@ class DQN {
         if (!this.learning) {
             return reward;
         }
-        this.age++;
         if (this.forwardPasses > this.temporalWindow + 1) {
             final Experience e = new Experience();
             final int n = this.windowSize;

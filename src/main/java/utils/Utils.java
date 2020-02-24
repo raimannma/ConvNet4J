@@ -38,10 +38,6 @@ public enum Utils {
         return arr;
     }
 
-    public static double max(final double[] arr) {
-        return Double.MIN_VALUE;
-    }
-
     public static double[] getMaxMin(final double[] arr) {
         if (arr.length == 0) {
             return new double[]{-1, Double.MIN_VALUE, -1, Double.MAX_VALUE};
