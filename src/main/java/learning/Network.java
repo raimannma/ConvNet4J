@@ -89,9 +89,9 @@ class Network {
             final LayerConfig def = layerConfigs.get(i);
             if (i > 0) {
                 final Layer prev = this.layers.get(i - 1);
-                def.setInSX(prev.outSX);
-                def.setInSY(prev.outSY);
-                def.setInDepth(prev.outDepth);
+                def.setInSX(prev.getOutSX());
+                def.setInSY(prev.getOutSY());
+                def.setInDepth(prev.getOutDepth());
             }
 
             switch (def.getType()) {
@@ -243,11 +243,11 @@ class Network {
 
     int getPrediction() {
         final Layer lastLayer = this.layers.get(this.layers.size() - 1);
-        if (lastLayer.type != Layer.LayerType.SOFTMAX) {
+        if (lastLayer.getType() != Layer.LayerType.SOFTMAX) {
             throw new RuntimeException("ERROR: getPrediction function assumes softmax as last layer of the net!");
         }
 
-        final double[] probabilities = lastLayer.outAct.w;
+        final double[] probabilities = lastLayer.getOutAct().w;
         double maxValue = probabilities[0];
         int maxIndex = 0;
         for (int i = 1; i < probabilities.length; i++) {
