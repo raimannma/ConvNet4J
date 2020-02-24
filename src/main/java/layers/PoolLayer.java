@@ -33,7 +33,7 @@ public class PoolLayer extends Layer {
         //computed
         this.outDepth = this.inDepth;
         this.outSX = (int) Math.floor((double) (inSX + this.pad * 2 - this.sx) / this.stride + 1);
-        this.outSX = (int) Math.floor((double) (inSY + this.pad * 2 - this.sy) / this.stride + 1);
+        this.outSY = (int) Math.floor((double) (inSY + this.pad * 2 - this.sy) / this.stride + 1);
         this.type = Layer.LayerType.POOL;
 
         this.switchX = Utils.zerosInt(this.outSX * this.outSY * this.outDepth);
