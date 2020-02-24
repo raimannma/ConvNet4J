@@ -61,12 +61,10 @@ public class LayerConfig {
     }
 
     static double getOrDefault(final double defaultValue, final double... values) {
-        for (final double value : values) {
-            if (!Double.isNaN(value) && value != -1) {
-                return value;
-            }
-        }
-        return defaultValue;
+        return Arrays.stream(values)
+                .filter(value -> !Double.isNaN(value) && value != -1)
+                .findFirst()
+                .orElse(defaultValue);
     }
 
     static int getOrDefault(final int defaultValue, final int... values) {
