@@ -14,11 +14,11 @@ import java.util.List;
 class Network {
     List<Layer> layers;
 
-    private Network() {
+    public Network() {
         this.layers = new ArrayList<>();
     }
 
-    Network(final LayerConfig[] layerConfigs) {
+    public Network(final LayerConfig[] layerConfigs) {
         this.makeLayers(layerConfigs);
     }
 
