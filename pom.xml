@@ -32,6 +32,18 @@
         </plugins>
     </build>
 
+    <scm>
+        <connection>scm:git:https://github.com/raimannma/ConvNet4J.git</connection>
+        <developerConnection>scm:git:https://github.com/raimannma/ConvNet4J.git</developerConnection>
+        <url>scm:git:https://github.com/raimannma/ConvNet4J/tree/${project.scm.tag}</url>
+        <tag>master</tag>
+    </scm>
+
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/raimannma/ConvNet4J/issues</url>
+    </issueManagement>
+
     <dependencies>
         <dependency>
             <groupId>com.google.code.gson</groupId>
